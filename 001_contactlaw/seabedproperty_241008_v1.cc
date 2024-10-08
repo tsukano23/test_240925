@@ -8,43 +8,34 @@
 #include <limits>
 
 #include "mbconfig.h"
-#include "ContactLaw.h"
+//#include "ContactLaw.h"
 
 
-/* -----------------------------ContactLaw  start --------------------------------------*/
-ContactLaw::ContactLaw(void)
+class seabedprop
 {
-	NO_OP;
-}
+private:
+    doublereal z_node;              //係留物のZ座標
+    doublereal z_seabed;            //海底面のZ座標             
+public:
+    seabedprop(void);
+    virtual ~seabedprop(void);
 
-ContactLaw::~ContactLaw(void)
-{
-	NO_OP;
-}
+    virtual void setValue(doublereal& sbz_node, doublereal& sbz_seabed);
+    virtual void get(doublereal& sbz_node, doublereal& sbz_seabed) const;
+};
 
+//各パラメータをメンバ変数としてセット
 void
-ContactLaw::setSeaDepth(Vec3 value_SeaDepth) const
+seabedprop::setValue(doublereal& sbz_node, doublereal& sbz_seabed)
 {
-    D = value_SeaDepth
+    z_node = sbz_node;
+    z_seabed = sbz_seabed;
 }
 
+//各パラメータを出力する
 void
-ContactLaw::setNodeHeight(Vec3 value_NodeHeight) const
+seabedprop::get(doublereal& sbz_node, doublereal& sbz_seabed) const
 {
-    H = value_NodeHeight
+    sbz_node = z_node;
+    sbz_seabed = z_seabed;
 }
-
-/* -----------------------------海底面と接触しているか判別　distinction　start*/
-void
-ContactLaw::Distincion(doublereal D1) const
-{
-    D1 = D[3] - H[3];
-    if (D1 >= 0 )
-    {
-        flag = 1;
-    }
-}
-/* -----------------------------海底面と接触しているか判別　distinction　end*/
-
-
-/* -----------------------------ContactLaw   end--------------------------------------*/
