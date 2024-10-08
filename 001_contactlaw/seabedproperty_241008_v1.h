@@ -2,7 +2,6 @@
 #ifndef SEABEDPROP_H
 #define SEABEDPROP_H
 
-#include <mbconfiz_seabed.h>
 #include "dataman.h"
 
 class seabedprop
@@ -19,20 +18,3 @@ public:
 };
 
 #endif // SEABEDPROP_H
-
-#ifndef SEABEDPROPOWNER_H
-#define SEABEDPROPOWNER_H
-
-class seabedpropowner
-{
-protected:
-    seabedprop pSeabedprop; 
-public:
-    seabedpropowner(void);
-    virtual ~seabedpropowner(void);
-
-    virtual void setSeabedprop(doublereal& z_node, doublereal& z_seabed);
-    virtual void get(doublereal& z_node, doublereal& z_seabed) const;
-};
-
-#endif // SEABEDPROPOWBER_H

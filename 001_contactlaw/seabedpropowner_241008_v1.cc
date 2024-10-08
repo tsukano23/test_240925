@@ -8,43 +8,26 @@
 #include <limits>
 
 #include "mbconfig.h"
-#include "ContactLaw.h"
+#include "seabedpropowner_241008_v1.h"
 
-
-/* -----------------------------ContactLaw  start --------------------------------------*/
-ContactLaw::ContactLaw(void)
+seabedpropowner::seabedpropowner(void)
 {
-	NO_OP;
+    NO_OP;
 }
 
-ContactLaw::~ContactLaw(void)
+seabedpropowner::~seabedpropowner(void)
 {
-	NO_OP;
-}
-
-void
-ContactLaw::setSeaDepth(Vec3 value_SeaDepth) const
-{
-    D = value_SeaDepth
+    NO_OP;   
 }
 
 void
-ContactLaw::setNodeHeight(Vec3 value_NodeHeight) const
+seabedpropowner::setSeabedprop(doublereal& z_node, doublereal& z_seabed)
 {
-    H = value_NodeHeight
+    pSeabedprop.setValue(z_node,z_seabed);
 }
 
-/* -----------------------------海底面と接触しているか判別　distinction　start*/
 void
-ContactLaw::Distincion(doublereal D1) const
+seabedpropowner::get(doublereal& z_node, doublereal& z_seabed) const
 {
-    D1 = D[3] - H[3];
-    if (D1 >= 0 )
-    {
-        flag = 1;
-    }
+    pSeabedprop.get(z_node,z_seabed);
 }
-/* -----------------------------海底面と接触しているか判別　distinction　end*/
-
-
-/* -----------------------------ContactLaw   end--------------------------------------*/

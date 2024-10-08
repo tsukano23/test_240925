@@ -1,28 +1,19 @@
 
-#ifndef CONTACTLAW_H
-#define CONTACTLAW_H
+#ifndef SEABEDPROPOWNER_H
+#define SEABEDPROPOWNER_H
 
-#include <mbconfig.h>
 #include "dataman.h"
 
-/* =================================================
- * class ContactLaw
- * ================================================= */
-class ContactLaw
+class seabedpropowner
 {
+protected:
+    seabedprop pSeabedprop; 
 public:
-    ContactLaw(void);
-    ~ContactLaw(void);
+    seabedpropowner(void);
+    virtual ~seabedpropowner(void);
 
-    //set private variable
-    virtual void setSeaDepth(Vec3 value_SeaDepth) const;
-    virtual void setNodeHeight(Vec3 value_NodeHeight) const;
-
-    //calculate strain and forces
-    virtual void Distinction(doublereal D1) const;
-private:
-    mutable Vec3 D;
-    mutable Vec3 H;
+    virtual void setSeabedprop(doublereal& z_node, doublereal& z_seabed);
+    virtual void get(doublereal& z_node, doublereal& z_seabed) const;
 };
 
-#endif //ContactLaw_H
+#endif // SEABEDPROPOWBER_H

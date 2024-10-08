@@ -36,24 +36,3 @@ seabedprop::get(doublereal& sbz_node, doublereal& sbz_seabed) const
     sbz_seabed = z_seabed;
 }
 
-seabedpropowner::seabedpropowner(void)
-{
-    NO_OP;
-}
-
-seabedpropowner::~seabedpropowner(void)
-{
-    NO_OP;   
-}
-
-void
-seabedpropowner::setSeabedprop(doublereal& z_node, doublereal& z_seabed)
-{
-    pSeabedprop.setValue(z_node,z_seabed);
-}
-
-void
-seabedpropowner::get(doublereal& z_node, doublereal& z_seabed) const
-{
-    pSeabedprop.get(z_node,z_seabed);
-}
