@@ -13,7 +13,7 @@
  * Constructor and Destructor
  *=======================================================================================*/
 //constructor
-contactlaw::contactlaw (
+Contactlaw::Contactlaw (
 	unsigned uLabel,
 	const DofOwner *pDO,
 	DataManager* pDM,
@@ -25,11 +25,11 @@ contactlaw::contactlaw (
 	if (HP.IsKeyWord("help")) {
 		silent_cout(
 			"help message\n"
-			"==== Module: contactlaw ====\n"
+			"==== Module: Contactlaw ====\n"
 			"- Note: \n"
 			"\ttest\n"
 			"- Usage: \n"
-			"\tcontactlaw;\n"
+			"\tContactlaw;\n"
 			<< std::endl);
 		if (!HP.IsArg()) {
 			throw NoErr(MBDYN_EXCEPT_ARGS);
@@ -66,14 +66,14 @@ contactlaw::contactlaw (
 	SetOutputFlag(pDM->fReadOutput(HP, Elem::LOADABLE));
 	//export log file
 	pDM->GetLogFile()
-		<< "contactlaw: " << uLabel
+		<< "Contactlaw: " << uLabel
 		<< " " << pNode->GetLabel()
-		<< " " << pSea->GetLabel()
+		<< " " << pSeabed->GetLabel()
 		<< std::endl;
 }
 
 //destructor
-contactlaw::~contactlaw (void)
+Contactlaw::~Contactlaw (void)
 {
 	NO_OP;
 }
@@ -84,21 +84,21 @@ contactlaw::~contactlaw (void)
  *=======================================================================================*/
 //set number of DOF
 unsigned int
-contactlaw::iGetInitialNumDof(void) const
+Contactlaw::iGetInitialNumDof(void) const
 {
 	return 0;
 }
 
 //set initial value
 void
-contactlaw::SetInitialValue(VectorHandler& XCurr)
+Contactlaw::SetInitialValue(VectorHandler& XCurr)
 {
 	return;
 }
 
 //set initial assembly matrix dimension
 void 
-contactlaw::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
+Contactlaw::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 {
 	*piNumRows = 0;
 	*piNumCols = 0;
@@ -106,7 +106,7 @@ contactlaw::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 
 //calculate residual vector for initial assembly analysis
 SubVectorHandler& 
-contactlaw::InitialAssRes(
+Contactlaw::InitialAssRes(
 	SubVectorHandler& WorkVec,
 	const VectorHandler& XCurr)
 {
@@ -116,7 +116,7 @@ contactlaw::InitialAssRes(
 
 //calculate Jaconbian for initial assembly analysis
 VariableSubMatrixHandler&
-contactlaw::InitialAssJac(
+Contactlaw::InitialAssJac(
 	VariableSubMatrixHandler& WorkMat, 
 	const VectorHandler& XCurr)
 {
@@ -130,14 +130,14 @@ contactlaw::InitialAssJac(
  *=======================================================================================*/
 //set number of DOF
 unsigned int
-contactlaw::iGetNumDof(void) const
+Contactlaw::iGetNumDof(void) const
 {
 	return 0;
 }
 
 //set DOF type
 DofOrder::Order
-contactlaw::GetDofType(unsigned int i) const
+Contactlaw::GetDofType(unsigned int i) const
 {
 
 	return DofOrder::DIFFERENTIAL;
@@ -145,7 +145,7 @@ contactlaw::GetDofType(unsigned int i) const
 
 //set initial value
 void
-contactlaw::SetValue(
+Contactlaw::SetValue(
 	DataManager *pDM,
 	VectorHandler& X,
 	VectorHandler& XP,
@@ -156,18 +156,18 @@ contactlaw::SetValue(
 
 //print explanation of variables and equations
 std::ostream&
-contactlaw::DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const
+Contactlaw::DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const
 {
 }
 std::ostream&
-contactlaw::DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const
+Contactlaw::DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const
 {
 }
 
 
 //set matrix dimension
 void
-contactlaw::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
+Contactlaw::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 {
 	*piNumRows = 1;
 	*piNumCols = 1;	
@@ -175,7 +175,7 @@ contactlaw::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 
 //calculate residual vector
 SubVectorHandler& 
-contactlaw::AssRes(
+Contactlaw::AssRes(
 	SubVectorHandler& WorkVec,
 	doublereal dCoef,
 	const VectorHandler& XCurr, 
@@ -205,7 +205,7 @@ contactlaw::AssRes(
 		s = 0;
 	} else{
 		s = 1;
-		std ::cout << "this node is contact"<<endl;
+		std ::cout << "this node is contact"<<std::endl;
 	}
 
 }
@@ -214,7 +214,7 @@ contactlaw::AssRes(
 
 //calculate Jacobian matrix
 VariableSubMatrixHandler& 
-contactlaw::AssJac(
+Contactlaw::AssJac(
 	VariableSubMatrixHandler& WorkMat,
 	doublereal dCoef, 
 	const VectorHandler& XCurr,
@@ -245,7 +245,7 @@ contactlaw::AssJac(
  *=======================================================================================*/
 //set number of private data
 unsigned int
-contactlaw::iGetNumPrivData(void) const
+Contactlaw::iGetNumPrivData(void) const
 {
 	return 0;
 }
@@ -253,7 +253,7 @@ contactlaw::iGetNumPrivData(void) const
 /*
 //set index of private data
 unsigned int
-contactlaw::iGetPrivDataIdx(const char *s) const
+Contactlaw::iGetPrivDataIdx(const char *s) const
 {	
 	static const struct {
 		int index;
@@ -272,13 +272,13 @@ contactlaw::iGetPrivDataIdx(const char *s) const
 		}
 	}
 
-	silent_cerr("contactlaw (" << GetLabel() << "): no private data \"" << s << "\"" << std::endl);
+	silent_cerr("Contactlaw (" << GetLabel() << "): no private data \"" << s << "\"" << std::endl);
 
 	return 0;	
 }
 //function to get private data
 doublereal
-contactlaw::dGetPrivData(unsigned int i) const;
+Contactlaw::dGetPrivData(unsigned int i) const;
 {
 	switch (i) {
 	case 1:
@@ -297,13 +297,13 @@ contactlaw::dGetPrivData(unsigned int i) const;
  *=======================================================================================*/
 //describe update function
 void 
-contactlaw::Update(const VectorHandler& XCurr, const VectorHandler& XPrimeCurr)
+Contactlaw::Update(const VectorHandler& XCurr, const VectorHandler& XPrimeCurr)
 {
 	return;
 }
 //process before each iteration
 void
-contactlaw::BeforePredict(VectorHandler& /* X */ ,
+Contactlaw::BeforePredict(VectorHandler& /* X */ ,
 					VectorHandler& /* XP */ ,
 					VectorHandler& /* XPrev */ ,
 					VectorHandler& /* XPPrev */ ) const
@@ -312,13 +312,13 @@ contactlaw::BeforePredict(VectorHandler& /* X */ ,
 }
 //process after each iteration
 void
-contactlaw::AfterPredict(VectorHandler& X, VectorHandler& XP)
+Contactlaw::AfterPredict(VectorHandler& X, VectorHandler& XP)
 {
 	return;
 }
 //process after convergence (each time step)
 void
-contactlaw::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
+Contactlaw::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
 {
 	return;
 }
@@ -329,7 +329,7 @@ contactlaw::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
  *=======================================================================================*/
 //output file 
 void
-contactlaw::Output(OutputHandler& OH) const
+Contactlaw::Output(OutputHandler& OH) const
 {
 	if (bToBeOutput()) {
 		if (OH.UseText(OutputHandler::LOADABLE)) {
@@ -345,23 +345,23 @@ contactlaw::Output(OutputHandler& OH) const
  *=======================================================================================*/
 //print information of connected nodes
 int
-contactlaw::iGetNumConnectedNodes(void) const
+Contactlaw::iGetNumConnectedNodes(void) const
 {
 	return 0;
 }
 void
-contactlaw::GetConnectedNodes(std::vector<const Node *>& connectedNodes) const
+Contactlaw::GetConnectedNodes(std::vector<const Node *>& connectedNodes) const
 {
 	return;
 }
 //output restart file
 std::ostream&
-contactlaw::Restart(std::ostream& out) const
+Contactlaw::Restart(std::ostream& out) const
 {
-   	return out << "# contactlaw (" << GetLabel() << "): not implemented yet" << std::endl;
+   	return out << "# Contactlaw (" << GetLabel() << "): not implemented yet" << std::endl;
 }
 
-/* ----------------------------- contactlaw end -------------------------------------- */
+/* ----------------------------- Contactlaw end -------------------------------------- */
 
 
 /*=======================================================================================
@@ -372,14 +372,14 @@ int module_init(const char *module_name, void *pdm, void *php)
 {
 	bool UDEset = true;
 
-	UserDefinedElemRead *rf = new UDERead<contactlaw>;
-	if (!SetUDE("contactlaw", rf)) {
+	UserDefinedElemRead *rf = new UDERead<Contactlaw>;
+	if (!SetUDE("Contactlaw", rf)) {
 		delete rf;
 		return false;
 	}
 
 	if (!UDEset) {
-		silent_cerr("contactlaw: "
+		silent_cerr("Contactlaw: "
 			"module_init(" << module_name << ") "
 			"failed" << std::endl);
 		return -1;

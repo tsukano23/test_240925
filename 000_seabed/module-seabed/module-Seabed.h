@@ -31,7 +31,7 @@ private:
 #endif //contactlaw_H
 */
 
-class seabed
+class Seabed
 : virtual public Elem, public UserDefinedElem, public seapropowner
 {
 public:
@@ -39,10 +39,10 @@ public:
 	 * Constructor and Destructor
 	 *===================================================================*/
 	//constructor
-	seabed(unsigned uLabel, const DofOwner *pDO,
+	Seabed(unsigned uLabel, const DofOwner *pDO,
 		DataManager* pDM, MBDynParser& HP);
 	//destructor
-	virtual ~seabed(void);
+	virtual ~Seabed(void);
 
 
 	/*===================================================================

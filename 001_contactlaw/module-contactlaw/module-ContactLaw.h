@@ -5,7 +5,7 @@
 #include "userelem.h"
 #include "module-contactlaw.h"
 
-class contactlaw
+class Contactlaw
 : virtual public Elem, public UserDefinedElem 
 {
 private:
@@ -21,10 +21,10 @@ public:
 	 * Constructor and Destructor
 	 *===================================================================*/
 	//constructor
-	contactlaw(unsigned uLabel, const DofOwner *pDO,
+	Contactlaw(unsigned uLabel, const DofOwner *pDO,
 		DataManager* pDM, MBDynParser& HP);
 	//destructor
-	virtual ~contactlaw(void);
+	virtual ~Contactlaw(void);
 
 
 	/*===================================================================
