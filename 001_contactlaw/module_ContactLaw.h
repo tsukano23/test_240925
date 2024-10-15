@@ -1,11 +1,15 @@
 
-#ifndef MODULE_CONTACTLAW_H
-#define MODULE_CONTACTLAW_H
+#include "mbconfig.h"
 
-#include "dataman.h"
-#include <userelem.h>
-#include"seabedproperty_241008_v1.h"
-#include"seabedpropowner_241008_v1.h"
+#include <cassert>
+#include <cstdio>
+#include <cmath>
+#include <cfloat>
+#include <iostream>
+#include <iomanip>
+#include <limits>
+
+#include "module_ContactLaw.h"
 
 /* =================================================
  * class ContactLaw
@@ -31,10 +35,8 @@ private:
 #endif //ContactLaw_H
 */
 
-class Seabed
-: virtual public Elem, public UserDefinedElem, public seapropowner
-{
-public:
+
+/* ----------------------------- ContactLaw start --------------------------------------*/
 	/*===================================================================
 	 * Constructor and Destructor
 	 *===================================================================*/

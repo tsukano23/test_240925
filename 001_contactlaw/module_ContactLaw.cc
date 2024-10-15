@@ -7,92 +7,71 @@
 #include <iomanip>
 #include <limits>
 
-#include "module_Seabed_241004_v1.h"
-#include "seabedproperty_241008_v1.h"
-#include "seabedpropowner_241008_v1.h"
-
+#include "module_ContactLaw.h"
 /* -----------------------------ContactLaw  start --------------------------------------*/
-/*ContactLaw::ContactLaw(void)
-{
-	NO_OP;
-}
-
-ContactLaw::~ContactLaw(void)
-{
-	NO_OP;
-}
-
-void
-ContactLaw::setSeaDepth(Vec3 value_SeaDepth) const
-{
-    D = value_SeaDepth
-}
-
-void
-ContactLaw::setNodeHeight(Vec3 value_NodeHeight) const
-{
-    H = value_NodeHeight
-}
-*/
-/* -----------------------------海底面と接触しているか判別　distinction　start*/
-/*void
-ContactLaw::Distincion(doublereal D1) const
-{
-    D1 = D[3] - H[3];
-    if (D1 >= 0 )
-    {
-        flag = 1;
-    }
-}*/
-/* -----------------------------海底面と接触しているか判別　distinction　end*/
-
-
-/* -----------------------------Seabed   end--------------------------------------*/
-
 /*=======================================================================================
  * Constructor and Destructor
  *=======================================================================================*/
 //constructor
-Seabed::Seabed (
+ContactLaw::ContactLaw (
 	unsigned uLabel,
 	const DofOwner *pDO,
 	DataManager* pDM,
 	MBDynParser& HP
 )
-: Elem(uLabel, flag(0)), UserDefinedElem(uLabel, pDO), seabedpropowner()
-//seabedpropとseabedpropownerを分けた場合、seabedpropertyも記載したほうが良いのか？
+: Elem(uLabel, flag(0)), UserDefinedElem(uLabel, pDO)
 {
 	// help message or no arg error
 	if (HP.IsKeyWord("help")) {
 		silent_cout(
 			"help message\n"
-			"==== Module: Seabed ====\n"
+			"==== Module: ContactLaw ====\n"
 			"- Note: \n"
-			"\tTest, \n"
+			"\ttest\n"
 			"- Usage: \n"
-			"\tSeabed, z_node, z_seabed;\n"
+			"\tContactLaw;\n"
 			<< std::endl);
-		
 		if (!HP.IsArg()) {
 			throw NoErr(MBDYN_EXCEPT_ARGS);
 		}
 	}
 
-    //ここで、.mbdのインプットファイルからの値をseapropertyクラスにセットする
-	doublereal z_node = HP.GetReal();
-	doublereal z_seabed = HP.GetReal();
-	pSeaprop.setValue(z_node, z_seabed);
+	// read node
+	pNode = dynamic_cast<const StructNode *>(pDM->ReadNode(HP, Node::STRUCTURAL));
+
+	// read sea object
+	unsigned int uElemLabel = (unsigned int)HP.GetInt();
+	pSeaBed = dynamic_cast<SeaBed *>(pDM->pFindElem(Elem::LOADABLE, uElemLabel));
+
+/*懸念点(1)
+　・モデルから読み取りが必要かつ、今までクラスで定義していたz_node,z_seabedらをここで再定義してmbdynファイルから読み取るという認識であっているか？
+*/
+	// read z_node
+	if (!HP.IsKeyWord("z_node")) {
+		silent_cerr("UserDefinedSpring(" << GetLabel() << "): keyword \"z_node\" expected at line " << HP.GetLineData() << std::endl);
+		throw ErrGeneric(MBDYN_EXCEPT_ARGS);
+	}
+	z_node = HP.GetReal();
+
+	// read z_seabed
+	if (!HP.IsKeyWord("z_seabed")) {
+		silent_cerr("UserDefinedSpring(" << GetLabel() << "): keyword \"z_seabed\" expected at line " << HP.GetLineData() << std::endl);
+		throw ErrGeneric(MBDYN_EXCEPT_ARGS);
+	}
+	z_seabed = HP.GetReal();
 
 	//output flag
 	SetOutputFlag(pDM->fReadOutput(HP, Elem::LOADABLE));
 	//export log file
 	pDM->GetLogFile()
-		<< "Seabed: " << uLabel
+		<< "ContactLaw: " << uLabel
+		<< " " << pNode->GetLabel()
+		<< " " << pSea->GetLabel()
 		<< std::endl;
 }
 
 //destructor
-Seabed::~Seabed (void)
+Hydrostatic::~Hydrostatic (void)
 {
 	NO_OP;
 }
@@ -103,21 +82,21 @@ Seabed::~Seabed (void)
  *=======================================================================================*/
 //set number of DOF
 unsigned int
-Seabed::iGetInitialNumDof(void) const
+Hydrostatic::iGetInitialNumDof(void) const
 {
 	return 0;
 }
 
 //set initial value
 void
-Seabed::SetInitialValue(VectorHandler& XCurr)
+Hydrostatic::SetInitialValue(VectorHandler& XCurr)
 {
 	return;
 }
 
 //set initial assembly matrix dimension
 void 
-Seabed::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
+Hydrostatic::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 {
 	*piNumRows = 0;
 	*piNumCols = 0;
@@ -125,7 +104,7 @@ Seabed::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 
 //calculate residual vector for initial assembly analysis
 SubVectorHandler& 
-Seabed::InitialAssRes(
+Hydrostatic::InitialAssRes(
 	SubVectorHandler& WorkVec,
 	const VectorHandler& XCurr)
 {
@@ -135,7 +114,7 @@ Seabed::InitialAssRes(
 
 //calculate Jaconbian for initial assembly analysis
 VariableSubMatrixHandler&
-Seabed::InitialAssJac(
+Hydrostatic::InitialAssJac(
 	VariableSubMatrixHandler& WorkMat, 
 	const VectorHandler& XCurr)
 {
@@ -149,14 +128,14 @@ Seabed::InitialAssJac(
  *=======================================================================================*/
 //set number of DOF
 unsigned int
-Seabed::iGetNumDof(void) const
+Hydrostatic::iGetNumDof(void) const
 {
 	return 0;
 }
 
 //set DOF type
 DofOrder::Order
-Seabed::GetDofType(unsigned int i) const
+Hydrostatic::GetDofType(unsigned int i) const
 {
 
 	return DofOrder::DIFFERENTIAL;
@@ -164,7 +143,7 @@ Seabed::GetDofType(unsigned int i) const
 
 //set initial value
 void
-Seabed::SetValue(
+Hydrostatic::SetValue(
 	DataManager *pDM,
 	VectorHandler& X,
 	VectorHandler& XP,
@@ -173,47 +152,109 @@ Seabed::SetValue(
 	return;
 }
 
-/*
 //print explanation of variables and equations
 std::ostream&
-Seabed::DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const
+Hydrostatic::DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const
 {
 }
 std::ostream&
-Seabed::DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const
+Hydrostatic::DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const
 {
 }
-*/
+
 
 //set matrix dimension
 void
-Seabed::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
+Hydrostatic::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 {
-	*piNumRows = 0;
-	*piNumCols = 0;	
+	*piNumRows = 1;
+	*piNumCols = 1;	
 }
 
 //calculate residual vector
 SubVectorHandler& 
-Seabed::AssRes(
+Hydrostatic::AssRes(
 	SubVectorHandler& WorkVec,
 	doublereal dCoef,
 	const VectorHandler& XCurr, 
 	const VectorHandler& XPrimeCurr)
 {
-	WorkVec.ResizeReset(0);
+	//obtain vector dimension
+	integer iNumRows;
+	integer iNumCols;
+	WorkSpaceDim(&iNumRows, &iNumCols);
+	WorkVec.ResizeReset(iNumRows);
+
+	//set index from global state vector
+	const integer iPositionIndex = pNode->iGetFirstPositionIndex();
+	const integer iMomentumIndex = pNode->iGetFirstMomentumIndex();
+	WorkVec.PutRowIndex(1, iMomentumIndex+3);
+
+	//calculate forces
+	doublereal rho,g,Zs;
+	pSea->get(rho, g, Zs);
+	doublereal C;
+	doublereal F;
+
+	doublereal z = XCurr(iPositionIndex+3)-Zs-length/2.0;
+	if (z>0.0) {
+		C = 0.0;
+	} else {
+		if (z>=-length) {
+			C =-z/length;
+		} else {
+			C = 1.0;
+		}
+	}
+	F = C*rho*g*volume;
+
+	//set value
+	WorkVec.PutCoef(1, F);
 	return WorkVec;
 }
 
 //calculate Jacobian matrix
 VariableSubMatrixHandler& 
-Seabed::AssJac(
+Hydrostatic::AssJac(
 	VariableSubMatrixHandler& WorkMat,
 	doublereal dCoef, 
 	const VectorHandler& XCurr,
 	const VectorHandler& XPrimeCurr)
 {
-	WorkMat.SetNullMatrix();
+	FullSubMatrixHandler& WM = WorkMat.SetFull();
+
+	//obtain vector dimension
+	integer iNumRows;
+	integer iNumCols;
+	WorkSpaceDim(&iNumRows, &iNumCols);
+	WM.ResizeReset(iNumRows, iNumCols);
+
+	//set index from global matrix
+  	const integer iPositionIndex = pNode->iGetFirstPositionIndex();
+	const integer iMomentumIndex = pNode->iGetFirstMomentumIndex();
+	WM.PutRowIndex(1, iMomentumIndex+3);
+	WM.PutColIndex(1, iPositionIndex+3);
+
+	//calculate forces
+	doublereal rho,g,Zs;
+	pSea->get(rho,g,Zs);
+	doublereal dC_dx;
+	doublereal dF_dx;
+
+	doublereal z = XCurr(iPositionIndex+3)-Zs-length/2.0;
+	if (z>0.0) {
+		dC_dx = 0.0;
+	} else {
+		if (z>=-length) {
+			dC_dx =-1.0/length;
+		} else {
+			dC_dx = 0.0;
+		}
+	}
+	dF_dx = dC_dx*rho*g*volume;
+
+	// set value
+	WM.PutCoef( 1,  1, -dF_dx*dCoef );
 	return WorkMat;
 }
 
@@ -223,7 +264,7 @@ Seabed::AssJac(
  *=======================================================================================*/
 //set number of private data
 unsigned int
-Seabed::iGetNumPrivData(void) const
+Hydrostatic::iGetNumPrivData(void) const
 {
 	return 0;
 }
@@ -231,7 +272,7 @@ Seabed::iGetNumPrivData(void) const
 /*
 //set index of private data
 unsigned int
-Seabed::iGetPrivDataIdx(const char *s) const
+Hydrostatic::iGetPrivDataIdx(const char *s) const
 {	
 	static const struct {
 		int index;
@@ -250,13 +291,13 @@ Seabed::iGetPrivDataIdx(const char *s) const
 		}
 	}
 
-	silent_cerr("Seabed (" << GetLabel() << "): no private data \"" << s << "\"" << std::endl);
+	silent_cerr("Hydrostatic (" << GetLabel() << "): no private data \"" << s << "\"" << std::endl);
 
 	return 0;	
 }
 //function to get private data
 doublereal
-Seabed::dGetPrivData(unsigned int i) const;
+Hydrostatic::dGetPrivData(unsigned int i) const;
 {
 	switch (i) {
 	case 1:
@@ -275,13 +316,13 @@ Seabed::dGetPrivData(unsigned int i) const;
  *=======================================================================================*/
 //describe update function
 void 
-Seabed::Update(const VectorHandler& XCurr, const VectorHandler& XPrimeCurr)
+Hydrostatic::Update(const VectorHandler& XCurr, const VectorHandler& XPrimeCurr)
 {
 	return;
 }
 //process before each iteration
 void
-Seabed::BeforePredict(VectorHandler& /* X */ ,
+Hydrostatic::BeforePredict(VectorHandler& /* X */ ,
 					VectorHandler& /* XP */ ,
 					VectorHandler& /* XPrev */ ,
 					VectorHandler& /* XPPrev */ ) const
@@ -290,13 +331,13 @@ Seabed::BeforePredict(VectorHandler& /* X */ ,
 }
 //process after each iteration
 void
-Seabed::AfterPredict(VectorHandler& X, VectorHandler& XP)
+Hydrostatic::AfterPredict(VectorHandler& X, VectorHandler& XP)
 {
 	return;
 }
 //process after convergence (each time step)
 void
-Seabed::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
+Hydrostatic::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
 {
 	return;
 }
@@ -307,7 +348,7 @@ Seabed::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
  *=======================================================================================*/
 //output file 
 void
-Seabed::Output(OutputHandler& OH) const
+Hydrostatic::Output(OutputHandler& OH) const
 {
 	if (bToBeOutput()) {
 		if (OH.UseText(OutputHandler::LOADABLE)) {
@@ -321,26 +362,25 @@ Seabed::Output(OutputHandler& OH) const
 /*=======================================================================================
  * etc
  *=======================================================================================*/
-/*
 //print information of connected nodes
 int
-Seabed::iGetNumConnectedNodes(void) const
+Hydrostatic::iGetNumConnectedNodes(void) const
 {
 	return 0;
 }
 void
-Seabed::GetConnectedNodes(std::vector<const Node *>& connectedNodes) const
+Hydrostatic::GetConnectedNodes(std::vector<const Node *>& connectedNodes) const
 {
 	return;
 }
-*/
 //output restart file
 std::ostream&
-Seabed::Restart(std::ostream& out) const
+Hydrostatic::Restart(std::ostream& out) const
 {
-   	return out << "# Seabed (" << GetLabel() << "): not implemented yet" << std::endl;
+   	return out << "# Hydrostatic (" << GetLabel() << "): not implemented yet" << std::endl;
 }
-/* ----------------------------- Seabed end -------------------------------------- */
+
+/* ----------------------------- Hydrostatic end -------------------------------------- */
 
 
 /*=======================================================================================
@@ -351,14 +391,14 @@ int module_init(const char *module_name, void *pdm, void *php)
 {
 	bool UDEset = true;
 
-	UserDefinedElemRead *rf = new UDERead<Seabed>;
-	if (!SetUDE("Seabed", rf)) {
+	UserDefinedElemRead *rf = new UDERead<Hydrostatic>;
+	if (!SetUDE("Hydrostatic", rf)) {
 		delete rf;
 		return false;
 	}
 
 	if (!UDEset) {
-		silent_cerr("Seabed: "
+		silent_cerr("Hydrostatic: "
 			"module_init(" << module_name << ") "
 			"failed" << std::endl);
 		return -1;
@@ -366,6 +406,4 @@ int module_init(const char *module_name, void *pdm, void *php)
 
 	return 0;
 }
-
-
 
