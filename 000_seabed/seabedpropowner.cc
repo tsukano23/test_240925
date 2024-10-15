@@ -8,7 +8,7 @@
 #include <limits>
 
 #include "mbconfig.h"
-#include "seabedpropowner_241008_v1.h"
+#include "seabedpropowner.h"
 
 seabedpropowner::seabedpropowner(void)
 {

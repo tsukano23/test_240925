@@ -7,7 +7,7 @@
 #include <iomanip>
 #include <limits>
 
-#include "module_ContactLaw.h"
+#include "module-ContactLaw.h"
 /* -----------------------------ContactLaw  start --------------------------------------*/
 /*=======================================================================================
  * Constructor and Destructor
