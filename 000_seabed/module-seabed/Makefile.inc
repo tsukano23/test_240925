@@ -1,0 +1,1 @@
+MODULE_DEPENDENCIES= seabedproperty.lo,seabedpropowner.lo
