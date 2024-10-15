@@ -7,9 +7,9 @@
 #include <iomanip>
 #include <limits>
 
-#include "module_Seabed_241004_v1.h"
-#include "seabedproperty_241008_v1.h"
-#include "seabedpropowner_241008_v1.h"
+#include "module-seabed.h"
+#include "seabedproperty.h"
+#include "seabedpropowner.h"
 
 /* -----------------------------ContactLaw  start --------------------------------------*/
 /*ContactLaw::ContactLaw(void)
@@ -47,13 +47,13 @@ ContactLaw::Distincion(doublereal D1) const
 /* -----------------------------海底面と接触しているか判別　distinction　end*/
 
 
-/* -----------------------------Seabed   end--------------------------------------*/
+/* -----------------------------seabed   end--------------------------------------*/
 
 /*=======================================================================================
  * Constructor and Destructor
  *=======================================================================================*/
 //constructor
-Seabed::Seabed (
+seabed::seabed (
 	unsigned uLabel,
 	const DofOwner *pDO,
 	DataManager* pDM,
@@ -66,11 +66,11 @@ Seabed::Seabed (
 	if (HP.IsKeyWord("help")) {
 		silent_cout(
 			"help message\n"
-			"==== Module: Seabed ====\n"
+			"==== Module: seabed ====\n"
 			"- Note: \n"
 			"\tTest, \n"
 			"- Usage: \n"
-			"\tSeabed, z_node, z_seabed;\n"
+			"\tseabed, z_node, z_seabed;\n"
 			<< std::endl);
 		
 		if (!HP.IsArg()) {
@@ -81,18 +81,18 @@ Seabed::Seabed (
     //ここで、.mbdのインプットファイルからの値をseapropertyクラスにセットする
 	doublereal z_node = HP.GetReal();
 	doublereal z_seabed = HP.GetReal();
-	pSeabedprop.setValue(z_node, z_seabed);
+	pseabedprop.setValue(z_node, z_seabed);
 
 	//output flag
 	SetOutputFlag(pDM->fReadOutput(HP, Elem::LOADABLE));
 	//export log file
 	pDM->GetLogFile()
-		<< "Seabed: " << uLabel
+		<< "seabed: " << uLabel
 		<< std::endl;
 }
 
 //destructor
-Seabed::~Seabed (void)
+seabed::~seabed (void)
 {
 	NO_OP;
 }
@@ -103,21 +103,21 @@ Seabed::~Seabed (void)
  *=======================================================================================*/
 //set number of DOF
 unsigned int
-Seabed::iGetInitialNumDof(void) const
+seabed::iGetInitialNumDof(void) const
 {
 	return 0;
 }
 
 //set initial value
 void
-Seabed::SetInitialValue(VectorHandler& XCurr)
+seabed::SetInitialValue(VectorHandler& XCurr)
 {
 	return;
 }
 
 //set initial assembly matrix dimension
 void 
-Seabed::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
+seabed::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 {
 	*piNumRows = 0;
 	*piNumCols = 0;
@@ -125,7 +125,7 @@ Seabed::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 
 //calculate residual vector for initial assembly analysis
 SubVectorHandler& 
-Seabed::InitialAssRes(
+seabed::InitialAssRes(
 	SubVectorHandler& WorkVec,
 	const VectorHandler& XCurr)
 {
@@ -135,7 +135,7 @@ Seabed::InitialAssRes(
 
 //calculate Jaconbian for initial assembly analysis
 VariableSubMatrixHandler&
-Seabed::InitialAssJac(
+seabed::InitialAssJac(
 	VariableSubMatrixHandler& WorkMat, 
 	const VectorHandler& XCurr)
 {
@@ -149,14 +149,14 @@ Seabed::InitialAssJac(
  *=======================================================================================*/
 //set number of DOF
 unsigned int
-Seabed::iGetNumDof(void) const
+seabed::iGetNumDof(void) const
 {
 	return 0;
 }
 
 //set DOF type
 DofOrder::Order
-Seabed::GetDofType(unsigned int i) const
+seabed::GetDofType(unsigned int i) const
 {
 
 	return DofOrder::DIFFERENTIAL;
@@ -164,7 +164,7 @@ Seabed::GetDofType(unsigned int i) const
 
 //set initial value
 void
-Seabed::SetValue(
+seabed::SetValue(
 	DataManager *pDM,
 	VectorHandler& X,
 	VectorHandler& XP,
@@ -176,18 +176,18 @@ Seabed::SetValue(
 /*
 //print explanation of variables and equations
 std::ostream&
-Seabed::DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const
+seabed::DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const
 {
 }
 std::ostream&
-Seabed::DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const
+seabed::DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const
 {
 }
 */
 
 //set matrix dimension
 void
-Seabed::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
+seabed::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 {
 	*piNumRows = 0;
 	*piNumCols = 0;	
@@ -195,7 +195,7 @@ Seabed::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 
 //calculate residual vector
 SubVectorHandler& 
-Seabed::AssRes(
+seabed::AssRes(
 	SubVectorHandler& WorkVec,
 	doublereal dCoef,
 	const VectorHandler& XCurr, 
@@ -207,7 +207,7 @@ Seabed::AssRes(
 
 //calculate Jacobian matrix
 VariableSubMatrixHandler& 
-Seabed::AssJac(
+seabed::AssJac(
 	VariableSubMatrixHandler& WorkMat,
 	doublereal dCoef, 
 	const VectorHandler& XCurr,
@@ -223,7 +223,7 @@ Seabed::AssJac(
  *=======================================================================================*/
 //set number of private data
 unsigned int
-Seabed::iGetNumPrivData(void) const
+seabed::iGetNumPrivData(void) const
 {
 	return 0;
 }
@@ -231,7 +231,7 @@ Seabed::iGetNumPrivData(void) const
 /*
 //set index of private data
 unsigned int
-Seabed::iGetPrivDataIdx(const char *s) const
+seabed::iGetPrivDataIdx(const char *s) const
 {	
 	static const struct {
 		int index;
@@ -250,13 +250,13 @@ Seabed::iGetPrivDataIdx(const char *s) const
 		}
 	}
 
-	silent_cerr("Seabed (" << GetLabel() << "): no private data \"" << s << "\"" << std::endl);
+	silent_cerr("seabed (" << GetLabel() << "): no private data \"" << s << "\"" << std::endl);
 
 	return 0;	
 }
 //function to get private data
 doublereal
-Seabed::dGetPrivData(unsigned int i) const;
+seabed::dGetPrivData(unsigned int i) const;
 {
 	switch (i) {
 	case 1:
@@ -275,13 +275,13 @@ Seabed::dGetPrivData(unsigned int i) const;
  *=======================================================================================*/
 //describe update function
 void 
-Seabed::Update(const VectorHandler& XCurr, const VectorHandler& XPrimeCurr)
+seabed::Update(const VectorHandler& XCurr, const VectorHandler& XPrimeCurr)
 {
 	return;
 }
 //process before each iteration
 void
-Seabed::BeforePredict(VectorHandler& /* X */ ,
+seabed::BeforePredict(VectorHandler& /* X */ ,
 					VectorHandler& /* XP */ ,
 					VectorHandler& /* XPrev */ ,
 					VectorHandler& /* XPPrev */ ) const
@@ -290,13 +290,13 @@ Seabed::BeforePredict(VectorHandler& /* X */ ,
 }
 //process after each iteration
 void
-Seabed::AfterPredict(VectorHandler& X, VectorHandler& XP)
+seabed::AfterPredict(VectorHandler& X, VectorHandler& XP)
 {
 	return;
 }
 //process after convergence (each time step)
 void
-Seabed::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
+seabed::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
 {
 	return;
 }
@@ -307,7 +307,7 @@ Seabed::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
  *=======================================================================================*/
 //output file 
 void
-Seabed::Output(OutputHandler& OH) const
+seabed::Output(OutputHandler& OH) const
 {
 	if (bToBeOutput()) {
 		if (OH.UseText(OutputHandler::LOADABLE)) {
@@ -324,23 +324,23 @@ Seabed::Output(OutputHandler& OH) const
 /*
 //print information of connected nodes
 int
-Seabed::iGetNumConnectedNodes(void) const
+seabed::iGetNumConnectedNodes(void) const
 {
 	return 0;
 }
 void
-Seabed::GetConnectedNodes(std::vector<const Node *>& connectedNodes) const
+seabed::GetConnectedNodes(std::vector<const Node *>& connectedNodes) const
 {
 	return;
 }
 */
 //output restart file
 std::ostream&
-Seabed::Restart(std::ostream& out) const
+seabed::Restart(std::ostream& out) const
 {
-   	return out << "# Seabed (" << GetLabel() << "): not implemented yet" << std::endl;
+   	return out << "# seabed (" << GetLabel() << "): not implemented yet" << std::endl;
 }
-/* ----------------------------- Seabed end -------------------------------------- */
+/* ----------------------------- seabed end -------------------------------------- */
 
 
 /*=======================================================================================
@@ -351,14 +351,14 @@ int module_init(const char *module_name, void *pdm, void *php)
 {
 	bool UDEset = true;
 
-	UserDefinedElemRead *rf = new UDERead<Seabed>;
-	if (!SetUDE("Seabed", rf)) {
+	UserDefinedElemRead *rf = new UDERead<seabed>;
+	if (!SetUDE("seabed", rf)) {
 		delete rf;
 		return false;
 	}
 
 	if (!UDEset) {
-		silent_cerr("Seabed: "
+		silent_cerr("seabed: "
 			"module_init(" << module_name << ") "
 			"failed" << std::endl);
 		return -1;

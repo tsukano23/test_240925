@@ -11,17 +11,17 @@
 
 #include "dataman.h"
 #include "userelem.h"
-#include "module-ContactLaw.h"
+#include "module-contactlaw.h"
 
 /* =================================================
- * class ContactLaw
+ * class contactlaw
  * ================================================= */
-/*class ContactLaw
+/*class contactlaw
 :
 {
 public:
-    ContactLaw(void);
-    ~ContactLaw(void);
+    contactlaw(void);
+    ~contactlaw(void);
 
     //set private variable
     virtual void setSeaDepth(Vec3 value_SeaDepth) const;
@@ -34,19 +34,19 @@ private:
     mutable Vec3 H;
 };
 
-#endif //ContactLaw_H
+#endif //contactlaw_H
 */
 
 
-/* ----------------------------- ContactLaw start --------------------------------------*/
+/* ----------------------------- contactlaw start --------------------------------------*/
 	/*===================================================================
 	 * Constructor and Destructor
 	 *===================================================================*/
 	//constructor
-	Seabed(unsigned uLabel, const DofOwner *pDO,
+	seabed(unsigned uLabel, const DofOwner *pDO,
 		DataManager* pDM, MBDynParser& HP);
 	//destructor
-	virtual ~Seabed(void);
+	virtual ~seabed(void);
 
 
 	/*===================================================================
@@ -169,4 +169,4 @@ private:
 	virtual std::ostream& Restart(std::ostream& out) const;
 };
 
-#endif // MODULE_Seabed_H
+#endif // MODULE_seabed_H

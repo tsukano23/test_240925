@@ -7,13 +7,13 @@
 #include <iomanip>
 #include <limits>
 
-#include "module-ContactLaw.h"
-/* -----------------------------ContactLaw  start --------------------------------------*/
+#include "module-contactlaw.h"
+/* -----------------------------contactlaw  start --------------------------------------*/
 /*=======================================================================================
  * Constructor and Destructor
  *=======================================================================================*/
 //constructor
-ContactLaw::ContactLaw (
+contactlaw::contactlaw (
 	unsigned uLabel,
 	const DofOwner *pDO,
 	DataManager* pDM,
@@ -25,11 +25,11 @@ ContactLaw::ContactLaw (
 	if (HP.IsKeyWord("help")) {
 		silent_cout(
 			"help message\n"
-			"==== Module: ContactLaw ====\n"
+			"==== Module: contactlaw ====\n"
 			"- Note: \n"
 			"\ttest\n"
 			"- Usage: \n"
-			"\tContactLaw;\n"
+			"\tcontactlaw;\n"
 			<< std::endl);
 		if (!HP.IsArg()) {
 			throw NoErr(MBDYN_EXCEPT_ARGS);
@@ -66,14 +66,14 @@ ContactLaw::ContactLaw (
 	SetOutputFlag(pDM->fReadOutput(HP, Elem::LOADABLE));
 	//export log file
 	pDM->GetLogFile()
-		<< "ContactLaw: " << uLabel
+		<< "contactlaw: " << uLabel
 		<< " " << pNode->GetLabel()
 		<< " " << pSea->GetLabel()
 		<< std::endl;
 }
 
 //destructor
-ContactLaw::~ContactLaw (void)
+contactlaw::~contactlaw (void)
 {
 	NO_OP;
 }
@@ -84,21 +84,21 @@ ContactLaw::~ContactLaw (void)
  *=======================================================================================*/
 //set number of DOF
 unsigned int
-ContactLaw::iGetInitialNumDof(void) const
+contactlaw::iGetInitialNumDof(void) const
 {
 	return 0;
 }
 
 //set initial value
 void
-ContactLaw::SetInitialValue(VectorHandler& XCurr)
+contactlaw::SetInitialValue(VectorHandler& XCurr)
 {
 	return;
 }
 
 //set initial assembly matrix dimension
 void 
-ContactLaw::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
+contactlaw::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 {
 	*piNumRows = 0;
 	*piNumCols = 0;
@@ -106,7 +106,7 @@ ContactLaw::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 
 //calculate residual vector for initial assembly analysis
 SubVectorHandler& 
-ContactLaw::InitialAssRes(
+contactlaw::InitialAssRes(
 	SubVectorHandler& WorkVec,
 	const VectorHandler& XCurr)
 {
@@ -116,7 +116,7 @@ ContactLaw::InitialAssRes(
 
 //calculate Jaconbian for initial assembly analysis
 VariableSubMatrixHandler&
-ContactLaw::InitialAssJac(
+contactlaw::InitialAssJac(
 	VariableSubMatrixHandler& WorkMat, 
 	const VectorHandler& XCurr)
 {
@@ -130,14 +130,14 @@ ContactLaw::InitialAssJac(
  *=======================================================================================*/
 //set number of DOF
 unsigned int
-ContactLaw::iGetNumDof(void) const
+contactlaw::iGetNumDof(void) const
 {
 	return 0;
 }
 
 //set DOF type
 DofOrder::Order
-ContactLaw::GetDofType(unsigned int i) const
+contactlaw::GetDofType(unsigned int i) const
 {
 
 	return DofOrder::DIFFERENTIAL;
@@ -145,7 +145,7 @@ ContactLaw::GetDofType(unsigned int i) const
 
 //set initial value
 void
-ContactLaw::SetValue(
+contactlaw::SetValue(
 	DataManager *pDM,
 	VectorHandler& X,
 	VectorHandler& XP,
@@ -156,18 +156,18 @@ ContactLaw::SetValue(
 
 //print explanation of variables and equations
 std::ostream&
-ContactLaw::DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const
+contactlaw::DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const
 {
 }
 std::ostream&
-ContactLaw::DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const
+contactlaw::DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const
 {
 }
 
 
 //set matrix dimension
 void
-ContactLaw::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
+contactlaw::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 {
 	*piNumRows = 1;
 	*piNumCols = 1;	
@@ -175,7 +175,7 @@ ContactLaw::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 
 //calculate residual vector
 SubVectorHandler& 
-ContactLaw::AssRes(
+contactlaw::AssRes(
 	SubVectorHandler& WorkVec,
 	doublereal dCoef,
 	const VectorHandler& XCurr, 
@@ -214,7 +214,7 @@ ContactLaw::AssRes(
 
 //calculate Jacobian matrix
 VariableSubMatrixHandler& 
-ContactLaw::AssJac(
+contactlaw::AssJac(
 	VariableSubMatrixHandler& WorkMat,
 	doublereal dCoef, 
 	const VectorHandler& XCurr,
@@ -245,7 +245,7 @@ ContactLaw::AssJac(
  *=======================================================================================*/
 //set number of private data
 unsigned int
-ContactLaw::iGetNumPrivData(void) const
+contactlaw::iGetNumPrivData(void) const
 {
 	return 0;
 }
@@ -253,7 +253,7 @@ ContactLaw::iGetNumPrivData(void) const
 /*
 //set index of private data
 unsigned int
-ContactLaw::iGetPrivDataIdx(const char *s) const
+contactlaw::iGetPrivDataIdx(const char *s) const
 {	
 	static const struct {
 		int index;
@@ -272,13 +272,13 @@ ContactLaw::iGetPrivDataIdx(const char *s) const
 		}
 	}
 
-	silent_cerr("ContactLaw (" << GetLabel() << "): no private data \"" << s << "\"" << std::endl);
+	silent_cerr("contactlaw (" << GetLabel() << "): no private data \"" << s << "\"" << std::endl);
 
 	return 0;	
 }
 //function to get private data
 doublereal
-ContactLaw::dGetPrivData(unsigned int i) const;
+contactlaw::dGetPrivData(unsigned int i) const;
 {
 	switch (i) {
 	case 1:
@@ -297,13 +297,13 @@ ContactLaw::dGetPrivData(unsigned int i) const;
  *=======================================================================================*/
 //describe update function
 void 
-ContactLaw::Update(const VectorHandler& XCurr, const VectorHandler& XPrimeCurr)
+contactlaw::Update(const VectorHandler& XCurr, const VectorHandler& XPrimeCurr)
 {
 	return;
 }
 //process before each iteration
 void
-ContactLaw::BeforePredict(VectorHandler& /* X */ ,
+contactlaw::BeforePredict(VectorHandler& /* X */ ,
 					VectorHandler& /* XP */ ,
 					VectorHandler& /* XPrev */ ,
 					VectorHandler& /* XPPrev */ ) const
@@ -312,13 +312,13 @@ ContactLaw::BeforePredict(VectorHandler& /* X */ ,
 }
 //process after each iteration
 void
-ContactLaw::AfterPredict(VectorHandler& X, VectorHandler& XP)
+contactlaw::AfterPredict(VectorHandler& X, VectorHandler& XP)
 {
 	return;
 }
 //process after convergence (each time step)
 void
-ContactLaw::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
+contactlaw::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
 {
 	return;
 }
@@ -329,7 +329,7 @@ ContactLaw::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
  *=======================================================================================*/
 //output file 
 void
-ContactLaw::Output(OutputHandler& OH) const
+contactlaw::Output(OutputHandler& OH) const
 {
 	if (bToBeOutput()) {
 		if (OH.UseText(OutputHandler::LOADABLE)) {
@@ -345,23 +345,23 @@ ContactLaw::Output(OutputHandler& OH) const
  *=======================================================================================*/
 //print information of connected nodes
 int
-ContactLaw::iGetNumConnectedNodes(void) const
+contactlaw::iGetNumConnectedNodes(void) const
 {
 	return 0;
 }
 void
-ContactLaw::GetConnectedNodes(std::vector<const Node *>& connectedNodes) const
+contactlaw::GetConnectedNodes(std::vector<const Node *>& connectedNodes) const
 {
 	return;
 }
 //output restart file
 std::ostream&
-ContactLaw::Restart(std::ostream& out) const
+contactlaw::Restart(std::ostream& out) const
 {
-   	return out << "# ContactLaw (" << GetLabel() << "): not implemented yet" << std::endl;
+   	return out << "# contactlaw (" << GetLabel() << "): not implemented yet" << std::endl;
 }
 
-/* ----------------------------- ContactLaw end -------------------------------------- */
+/* ----------------------------- contactlaw end -------------------------------------- */
 
 
 /*=======================================================================================
@@ -372,14 +372,14 @@ int module_init(const char *module_name, void *pdm, void *php)
 {
 	bool UDEset = true;
 
-	UserDefinedElemRead *rf = new UDERead<ContactLaw>;
-	if (!SetUDE("ContactLaw", rf)) {
+	UserDefinedElemRead *rf = new UDERead<contactlaw>;
+	if (!SetUDE("contactlaw", rf)) {
 		delete rf;
 		return false;
 	}
 
 	if (!UDEset) {
-		silent_cerr("ContactLaw: "
+		silent_cerr("contactlaw: "
 			"module_init(" << module_name << ") "
 			"failed" << std::endl);
 		return -1;

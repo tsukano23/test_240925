@@ -3,19 +3,19 @@
 #define MODULE_CONTACTLAW_H
 
 #include "dataman.h"
-#include <userelem.h>
-#include"seabedproperty_241008_v1.h"
-#include"seabedpropowner_241008_v1.h"
+#include "userelem.h"
+#include"seabedproperty.h"
+#include"seabedpropowner.h"
 
 /* =================================================
- * class ContactLaw
+ * class contactlaw
  * ================================================= */
-/*class ContactLaw
+/*class contactlaw
 :
 {
 public:
-    ContactLaw(void);
-    ~ContactLaw(void);
+    contactlaw(void);
+    ~contactlaw(void);
 
     //set private variable
     virtual void setSeaDepth(Vec3 value_SeaDepth) const;
@@ -28,10 +28,10 @@ private:
     mutable Vec3 H;
 };
 
-#endif //ContactLaw_H
+#endif //contactlaw_H
 */
 
-class Seabed
+class seabed
 : virtual public Elem, public UserDefinedElem, public seapropowner
 {
 public:
@@ -39,10 +39,10 @@ public:
 	 * Constructor and Destructor
 	 *===================================================================*/
 	//constructor
-	Seabed(unsigned uLabel, const DofOwner *pDO,
+	seabed(unsigned uLabel, const DofOwner *pDO,
 		DataManager* pDM, MBDynParser& HP);
 	//destructor
-	virtual ~Seabed(void);
+	virtual ~seabed(void);
 
 
 	/*===================================================================
@@ -165,4 +165,4 @@ public:
 	virtual std::ostream& Restart(std::ostream& out) const;
 };
 
-#endif // MODULE_Seabed_H
+#endif // MODULE_seabed_H
