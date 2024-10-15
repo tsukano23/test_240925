@@ -39,11 +39,13 @@ ContactLaw::ContactLaw (
 	// read node
 	pNode = dynamic_cast<const StructNode *>(pDM->ReadNode(HP, Node::STRUCTURAL));
 
-	// read sea object
+
+	// read SeaBed object
+	/*module-seabedのelementのラベルを取得することで間接的にseabedpropertyクラスにアクセスできるようにしている。*/
 	unsigned int uElemLabel = (unsigned int)HP.GetInt();
 	pSeaBed = dynamic_cast<SeaBed *>(pDM->pFindElem(Elem::LOADABLE, uElemLabel));
 
-/*懸念点(1)
+/*懸念点(1)@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 　・モデルから読み取りが必要かつ、今までクラスで定義していたz_node,z_seabedらをここで再定義してmbdynファイルから読み取るという認識であっているか？
 */
 	// read z_node
@@ -71,7 +73,7 @@ ContactLaw::ContactLaw (
 }
 
 //destructor
-Hydrostatic::~Hydrostatic (void)
+ContactLaw::~ContactLaw (void)
 {
 	NO_OP;
 }
@@ -82,21 +84,21 @@ Hydrostatic::~Hydrostatic (void)
  *=======================================================================================*/
 //set number of DOF
 unsigned int
-Hydrostatic::iGetInitialNumDof(void) const
+ContactLaw::iGetInitialNumDof(void) const
 {
 	return 0;
 }
 
 //set initial value
 void
-Hydrostatic::SetInitialValue(VectorHandler& XCurr)
+ContactLaw::SetInitialValue(VectorHandler& XCurr)
 {
 	return;
 }
 
 //set initial assembly matrix dimension
 void 
-Hydrostatic::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
+ContactLaw::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 {
 	*piNumRows = 0;
 	*piNumCols = 0;
@@ -104,7 +106,7 @@ Hydrostatic::InitialWorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 
 //calculate residual vector for initial assembly analysis
 SubVectorHandler& 
-Hydrostatic::InitialAssRes(
+ContactLaw::InitialAssRes(
 	SubVectorHandler& WorkVec,
 	const VectorHandler& XCurr)
 {
@@ -114,7 +116,7 @@ Hydrostatic::InitialAssRes(
 
 //calculate Jaconbian for initial assembly analysis
 VariableSubMatrixHandler&
-Hydrostatic::InitialAssJac(
+ContactLaw::InitialAssJac(
 	VariableSubMatrixHandler& WorkMat, 
 	const VectorHandler& XCurr)
 {
@@ -128,14 +130,14 @@ Hydrostatic::InitialAssJac(
  *=======================================================================================*/
 //set number of DOF
 unsigned int
-Hydrostatic::iGetNumDof(void) const
+ContactLaw::iGetNumDof(void) const
 {
 	return 0;
 }
 
 //set DOF type
 DofOrder::Order
-Hydrostatic::GetDofType(unsigned int i) const
+ContactLaw::GetDofType(unsigned int i) const
 {
 
 	return DofOrder::DIFFERENTIAL;
@@ -143,7 +145,7 @@ Hydrostatic::GetDofType(unsigned int i) const
 
 //set initial value
 void
-Hydrostatic::SetValue(
+ContactLaw::SetValue(
 	DataManager *pDM,
 	VectorHandler& X,
 	VectorHandler& XP,
@@ -154,18 +156,18 @@ Hydrostatic::SetValue(
 
 //print explanation of variables and equations
 std::ostream&
-Hydrostatic::DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const
+ContactLaw::DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const
 {
 }
 std::ostream&
-Hydrostatic::DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const
+ContactLaw::DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const
 {
 }
 
 
 //set matrix dimension
 void
-Hydrostatic::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
+ContactLaw::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 {
 	*piNumRows = 1;
 	*piNumCols = 1;	
@@ -173,7 +175,7 @@ Hydrostatic::WorkSpaceDim(integer* piNumRows, integer* piNumCols) const
 
 //calculate residual vector
 SubVectorHandler& 
-Hydrostatic::AssRes(
+ContactLaw::AssRes(
 	SubVectorHandler& WorkVec,
 	doublereal dCoef,
 	const VectorHandler& XCurr, 
@@ -190,32 +192,32 @@ Hydrostatic::AssRes(
 	const integer iMomentumIndex = pNode->iGetFirstMomentumIndex();
 	WorkVec.PutRowIndex(1, iMomentumIndex+3);
 
-	//calculate forces
+/*=====================================================================================================*/
+
+	//compare z coordinates
 	doublereal rho,g,Zs;
-	pSea->get(rho, g, Zs);
-	doublereal C;
-	doublereal F;
+	pSeabed->get(z_node, z_seabed);
 
-	doublereal z = XCurr(iPositionIndex+3)-Zs-length/2.0;
-	if (z>0.0) {
-		C = 0.0;
-	} else {
-		if (z>=-length) {
-			C =-z/length;
-		} else {
-			C = 1.0;
-		}
+	integer s;
+	doublereal D = z_node - z_seabed;
+
+	if(D>0.0){
+		s = 0;
+	} else{
+		s = 1;
 	}
-	F = C*rho*g*volume;
 
-	//set value
-	WorkVec.PutCoef(1, F);
+
+	//set value/*疑問点（１）@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+	WorkVec.PutCoef(1, s);
 	return WorkVec;
 }
 
+/*=====================================================================================================*/
+
 //calculate Jacobian matrix
 VariableSubMatrixHandler& 
-Hydrostatic::AssJac(
+ContactLaw::AssJac(
 	VariableSubMatrixHandler& WorkMat,
 	doublereal dCoef, 
 	const VectorHandler& XCurr,
@@ -258,13 +260,14 @@ Hydrostatic::AssJac(
 	return WorkMat;
 }
 
+/*=====================================================================================================*/
 
 /*=======================================================================================
  * Private Data
  *=======================================================================================*/
 //set number of private data
 unsigned int
-Hydrostatic::iGetNumPrivData(void) const
+ContactLaw::iGetNumPrivData(void) const
 {
 	return 0;
 }
@@ -272,7 +275,7 @@ Hydrostatic::iGetNumPrivData(void) const
 /*
 //set index of private data
 unsigned int
-Hydrostatic::iGetPrivDataIdx(const char *s) const
+ContactLaw::iGetPrivDataIdx(const char *s) const
 {	
 	static const struct {
 		int index;
@@ -291,13 +294,13 @@ Hydrostatic::iGetPrivDataIdx(const char *s) const
 		}
 	}
 
-	silent_cerr("Hydrostatic (" << GetLabel() << "): no private data \"" << s << "\"" << std::endl);
+	silent_cerr("ContactLaw (" << GetLabel() << "): no private data \"" << s << "\"" << std::endl);
 
 	return 0;	
 }
 //function to get private data
 doublereal
-Hydrostatic::dGetPrivData(unsigned int i) const;
+ContactLaw::dGetPrivData(unsigned int i) const;
 {
 	switch (i) {
 	case 1:
@@ -316,13 +319,13 @@ Hydrostatic::dGetPrivData(unsigned int i) const;
  *=======================================================================================*/
 //describe update function
 void 
-Hydrostatic::Update(const VectorHandler& XCurr, const VectorHandler& XPrimeCurr)
+ContactLaw::Update(const VectorHandler& XCurr, const VectorHandler& XPrimeCurr)
 {
 	return;
 }
 //process before each iteration
 void
-Hydrostatic::BeforePredict(VectorHandler& /* X */ ,
+ContactLaw::BeforePredict(VectorHandler& /* X */ ,
 					VectorHandler& /* XP */ ,
 					VectorHandler& /* XPrev */ ,
 					VectorHandler& /* XPPrev */ ) const
@@ -331,13 +334,13 @@ Hydrostatic::BeforePredict(VectorHandler& /* X */ ,
 }
 //process after each iteration
 void
-Hydrostatic::AfterPredict(VectorHandler& X, VectorHandler& XP)
+ContactLaw::AfterPredict(VectorHandler& X, VectorHandler& XP)
 {
 	return;
 }
 //process after convergence (each time step)
 void
-Hydrostatic::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
+ContactLaw::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
 {
 	return;
 }
@@ -348,7 +351,7 @@ Hydrostatic::AfterConvergence(const VectorHandler& X, const VectorHandler& XP)
  *=======================================================================================*/
 //output file 
 void
-Hydrostatic::Output(OutputHandler& OH) const
+ContactLaw::Output(OutputHandler& OH) const
 {
 	if (bToBeOutput()) {
 		if (OH.UseText(OutputHandler::LOADABLE)) {
@@ -364,23 +367,23 @@ Hydrostatic::Output(OutputHandler& OH) const
  *=======================================================================================*/
 //print information of connected nodes
 int
-Hydrostatic::iGetNumConnectedNodes(void) const
+ContactLaw::iGetNumConnectedNodes(void) const
 {
 	return 0;
 }
 void
-Hydrostatic::GetConnectedNodes(std::vector<const Node *>& connectedNodes) const
+ContactLaw::GetConnectedNodes(std::vector<const Node *>& connectedNodes) const
 {
 	return;
 }
 //output restart file
 std::ostream&
-Hydrostatic::Restart(std::ostream& out) const
+ContactLaw::Restart(std::ostream& out) const
 {
-   	return out << "# Hydrostatic (" << GetLabel() << "): not implemented yet" << std::endl;
+   	return out << "# ContactLaw (" << GetLabel() << "): not implemented yet" << std::endl;
 }
 
-/* ----------------------------- Hydrostatic end -------------------------------------- */
+/* ----------------------------- ContactLaw end -------------------------------------- */
 
 
 /*=======================================================================================
@@ -391,14 +394,14 @@ int module_init(const char *module_name, void *pdm, void *php)
 {
 	bool UDEset = true;
 
-	UserDefinedElemRead *rf = new UDERead<Hydrostatic>;
-	if (!SetUDE("Hydrostatic", rf)) {
+	UserDefinedElemRead *rf = new UDERead<ContactLaw>;
+	if (!SetUDE("ContactLaw", rf)) {
 		delete rf;
 		return false;
 	}
 
 	if (!UDEset) {
-		silent_cerr("Hydrostatic: "
+		silent_cerr("ContactLaw: "
 			"module_init(" << module_name << ") "
 			"failed" << std::endl);
 		return -1;

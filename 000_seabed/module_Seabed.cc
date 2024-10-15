@@ -81,7 +81,7 @@ Seabed::Seabed (
     //ここで、.mbdのインプットファイルからの値をseapropertyクラスにセットする
 	doublereal z_node = HP.GetReal();
 	doublereal z_seabed = HP.GetReal();
-	pSeaprop.setValue(z_node, z_seabed);
+	pSeabedprop.setValue(z_node, z_seabed);
 
 	//output flag
 	SetOutputFlag(pDM->fReadOutput(HP, Elem::LOADABLE));
