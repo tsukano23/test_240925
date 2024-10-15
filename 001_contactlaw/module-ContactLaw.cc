@@ -235,26 +235,7 @@ ContactLaw::AssJac(
 	WM.PutColIndex(1, iPositionIndex+3);
 
 	//calculate forces
-	doublereal rho,g,Zs;
-	pSea->get(rho,g,Zs);
-	doublereal dC_dx;
-	doublereal dF_dx;
-
-	doublereal z = XCurr(iPositionIndex+3)-Zs-length/2.0;
-	if (z>0.0) {
-		dC_dx = 0.0;
-	} else {
-		if (z>=-length) {
-			dC_dx =-1.0/length;
-		} else {
-			dC_dx = 0.0;
-		}
-	}
-	dF_dx = dC_dx*rho*g*volume;
-
-	// set value
-	WM.PutCoef( 1,  1, -dF_dx*dCoef );
-	return WorkMat;
+	
 }
 
 /*=====================================================================================================*/
