@@ -9,6 +9,8 @@
 #include <iomanip>
 #include <limits>
 
+#include "dataman.h"
+#include "userelem.h"
 #include "module-ContactLaw.h"
 
 /* =================================================
