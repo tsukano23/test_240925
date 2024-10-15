@@ -1,52 +1,30 @@
-
-#include "mbconfig.h"
-
-#include <cassert>
-#include <cstdio>
-#include <cmath>
-#include <cfloat>
-#include <iostream>
-#include <iomanip>
-#include <limits>
+#ifndef MODULE_CONTACTLAW_H
+#define MODULE_CONTACTLAW_H
 
 #include "dataman.h"
 #include "userelem.h"
 #include "module-contactlaw.h"
 
-/* =================================================
- * class contactlaw
- * ================================================= */
-/*class contactlaw
-:
+class contactlaw
+: virtual public Elem, public UserDefinedElem 
 {
-public:
-    contactlaw(void);
-    ~contactlaw(void);
-
-    //set private variable
-    virtual void setSeaDepth(Vec3 value_SeaDepth) const;
-    virtual void setNodeHeight(Vec3 value_NodeHeight) const;
-
-    //calculate strain and forces
-    virtual void Distinction(doublereal D1) const;
 private:
-    mutable Vec3 D;
-    mutable Vec3 H;
-};
+	/*===================================================================
+	 * Private Member Variables
+	 *===================================================================*/
+	//other private member
+	const StructNode *pNode;
+	const Seabed *pSeabed;
 
-#endif //contactlaw_H
-*/
-
-
-/* ----------------------------- contactlaw start --------------------------------------*/
+public:
 	/*===================================================================
 	 * Constructor and Destructor
 	 *===================================================================*/
 	//constructor
-	seabed(unsigned uLabel, const DofOwner *pDO,
+	contactlaw(unsigned uLabel, const DofOwner *pDO,
 		DataManager* pDM, MBDynParser& HP);
 	//destructor
-	virtual ~seabed(void);
+	virtual ~contactlaw(void);
 
 
 	/*===================================================================
@@ -88,11 +66,10 @@ private:
 	//set initial value
 	void SetValue(DataManager *pDM, VectorHandler& X, VectorHandler& XP,
 		SimulationEntity::Hints *ph);
-	/*
 	//print explanation of variables and equations
 	virtual std::ostream& DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const;
 	virtual std::ostream& DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const;
-	*/
+	
 
 	/*-------------------------------------------------------------------
 	 * Configure contribution for state equation
@@ -163,10 +140,10 @@ private:
 	 * etc
 	 *===================================================================*/
 	//print information of connected nodes
-	//virtual int iGetNumConnectedNodes(void) const;
-	//virtual void GetConnectedNodes(std::vector<const Node *>& connectedNodes) const;
+	virtual int iGetNumConnectedNodes(void) const;
+	virtual void GetConnectedNodes(std::vector<const Node *>& connectedNodes) const;
 	//output restart file
 	virtual std::ostream& Restart(std::ostream& out) const;
 };
 
-#endif // MODULE_seabed_H
+#endif // MODULE_contactlaw_H
