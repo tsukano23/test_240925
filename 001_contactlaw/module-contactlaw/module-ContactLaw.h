@@ -3,7 +3,7 @@
 
 #include "dataman.h"
 #include "userelem.h"
-#include "module-contactlaw.h"
+#include "module-seabed.h"
 
 class Contactlaw
 : virtual public Elem, public UserDefinedElem 
@@ -146,4 +146,4 @@ public:
 	virtual std::ostream& Restart(std::ostream& out) const;
 };
 
-#endif // MODULE_contactlaw_H
+#endif // MODULE_CONTACTLAW_H

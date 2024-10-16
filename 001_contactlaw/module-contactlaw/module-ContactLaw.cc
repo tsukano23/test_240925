@@ -1,4 +1,5 @@
 #include "mbconfig.h"
+
 #include <cassert>
 #include <cstdio>
 #include <cmath>
@@ -8,6 +9,8 @@
 #include <limits>
 
 #include "module-contactlaw.h"
+
+
 /* -----------------------------contactlaw  start --------------------------------------*/
 /*=======================================================================================
  * Constructor and Destructor
@@ -39,15 +42,11 @@ Contactlaw::Contactlaw (
 	// read node
 	pNode = dynamic_cast<const StructNode *>(pDM->ReadNode(HP, Node::STRUCTURAL));
 
-
-	// read SeaBed object
-	/*module-seabedのelementのラベルを取得することで間接的にseabedpropertyクラスにアクセスできるようにしている。*/
+	// read Seabed object
 	unsigned int uElemLabel = (unsigned int)HP.GetInt();
-	pSeaBed = dynamic_cast<SeaBed *>(pDM->pFindElem(Elem::LOADABLE, uElemLabel));
+	pSeabed = dynamic_cast<Seabed *>(pDM->pFindElem(Elem::LOADABLE, uElemLabel));
 
-/*懸念点(1)@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-　・モデルから読み取りが必要かつ、今までクラスで定義していたz_node,z_seabedらをここで再定義してmbdynファイルから読み取るという認識であっているか？
-*/
+/*
 	// read z_node
 	if (!HP.IsKeyWord("z_node")) {
 		silent_cerr("UserDefinedSpring(" << GetLabel() << "): keyword \"z_node\" expected at line " << HP.GetLineData() << std::endl);
@@ -61,6 +60,7 @@ Contactlaw::Contactlaw (
 		throw ErrGeneric(MBDYN_EXCEPT_ARGS);
 	}
 	z_seabed = HP.GetReal();
+*/
 
 	//output flag
 	SetOutputFlag(pDM->fReadOutput(HP, Elem::LOADABLE));
@@ -192,13 +192,12 @@ Contactlaw::AssRes(
 	const integer iMomentumIndex = pNode->iGetFirstMomentumIndex();
 	WorkVec.PutRowIndex(1, iMomentumIndex+3);
 
-/*=====================================================================================================*/
-
+/*-------------------------------------------------------------------------------------*/
 	//compare z coordinates
-	doublereal rho,g,Zs;
+	doublereal z_node, z_seabed;
 	pSeabed->get(z_node, z_seabed);
-
 	integer s;
+	
 	doublereal D = z_node - z_seabed;
 
 	if(D>0.0){
@@ -207,10 +206,8 @@ Contactlaw::AssRes(
 		s = 1;
 		std ::cout << "this node is contact"<<std::endl;
 	}
-
+/*-------------------------------------------------------------------------------------*/
 }
-
-/*=====================================================================================================*/
 
 //calculate Jacobian matrix
 VariableSubMatrixHandler& 
@@ -233,12 +230,8 @@ Contactlaw::AssJac(
 	const integer iMomentumIndex = pNode->iGetFirstMomentumIndex();
 	WM.PutRowIndex(1, iMomentumIndex+3);
 	WM.PutColIndex(1, iPositionIndex+3);
-
-	//calculate forces
-	
 }
 
-/*=====================================================================================================*/
 
 /*=======================================================================================
  * Private Data
@@ -250,47 +243,6 @@ Contactlaw::iGetNumPrivData(void) const
 	return 0;
 }
 
-/*
-//set index of private data
-unsigned int
-Contactlaw::iGetPrivDataIdx(const char *s) const
-{	
-	static const struct {
-		int index;
-		char name[3];
-	}
-
-	data[] = {
-			{ 1, "A"},
-			{ 2, "B"},
-			{ 3, "C"},
-	};
-
-	for (unsigned i = 0; i < sizeof(data) / sizeof(data[0]); ++i ) {
-		if (0 == strcmp(data[i].name,s)) {
-			return data[i].index;
-		}
-	}
-
-	silent_cerr("Contactlaw (" << GetLabel() << "): no private data \"" << s << "\"" << std::endl);
-
-	return 0;	
-}
-//function to get private data
-doublereal
-Contactlaw::dGetPrivData(unsigned int i) const;
-{
-	switch (i) {
-	case 1:
-		return a;
-	case 2:
-		return b;
-	case 3:
-		return c;
-	}
-	throw DataManager::ErrGeneric(MBDYN_EXCEPT_ARGS);
-}
-*/
 
 /*=======================================================================================
  * Configure runtime processing
@@ -387,4 +339,3 @@ int module_init(const char *module_name, void *pdm, void *php)
 
 	return 0;
 }
-

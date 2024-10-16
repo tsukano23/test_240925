@@ -1,38 +1,13 @@
 
-#ifndef MODULE_CONTACTLAW_H
-#define MODULE_CONTACTLAW_H
+#ifndef MODULE_SEABED_H
+#define MODULE_SEABED_H
 
 #include "dataman.h"
 #include "userelem.h"
-#include"seabedproperty.h"
-#include"seabedpropowner.h"
-
-/* =================================================
- * class contactlaw
- * ================================================= */
-/*class contactlaw
-:
-{
-public:
-    contactlaw(void);
-    ~contactlaw(void);
-
-    //set private variable
-    virtual void setSeaDepth(Vec3 value_SeaDepth) const;
-    virtual void setNodeHeight(Vec3 value_NodeHeight) const;
-
-    //calculate strain and forces
-    virtual void Distinction(doublereal D1) const;
-private:
-    mutable Vec3 D;
-    mutable Vec3 H;
-};
-
-#endif //contactlaw_H
-*/
+#include"seabedprop.h"
 
 class Seabed
-: virtual public Elem, public UserDefinedElem, public seapropowner
+: virtual public Elem, public UserDefinedElem, public seabedpropowner
 {
 public:
 	/*===================================================================
@@ -84,19 +59,8 @@ public:
 	//set initial value
 	void SetValue(DataManager *pDM, VectorHandler& X, VectorHandler& XP,
 		SimulationEntity::Hints *ph);
-	/*
-	//print explanation of variables and equations
-	virtual std::ostream& DescribeDof(std::ostream& out, const char *prefix, bool bInitial) const;
-	virtual std::ostream& DescribeEq(std::ostream& out, const char *prefix, bool bInitial) const;
-	*/
+	
 
-	/*-------------------------------------------------------------------
-	 * Configure contribution for state equation
-	 * state equation A@\Delta{\dot{y}} = b,
-	 * where, y is the state vector
-	 * AssRes evaluates: b = F(\dot{y},y,t)
-	 * AssJac evaluates: A = -F_{\dot{y}}-dCoef F_{y}
-	 *-------------------------------------------------------------------*/
 	//set matrix dimension
 	virtual void WorkSpaceDim(integer* piNumRows, integer* piNumCols) const;
 	//calculate residual vector, b
@@ -121,12 +85,6 @@ public:
 	 *-------------------------------------------------------------------*/
 	//set number of private data
 	virtual unsigned int iGetNumPrivData(void) const;
-	/*
-	//set index of private data
-	virtual unsigned int iGetPrivDataIdx(const char *s) const;
-	//function to get private data
-	virtual doublereal dGetPrivData(unsigned int i) const;
-	*/
 
 	/*-------------------------------------------------------------------
 	 * Configure runtime processing
