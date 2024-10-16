@@ -7,19 +7,21 @@ end: data;
  
 begin: initial value;
    initial time:   0.;
-   final time:     1.;
-   time step:      1.e-3;
-   max iterations: 10;
+   final time:     100.;
+   time step:      0.001;
+   max iterations: 100;
    tolerance:      1.e-6;
+	derivatives tolerance: 1.e-5;
+	derivatives max iterations: 100;
 end: initial value;
 
 #-----------------------------------------------------------------------
 
 begin: control data;
-    output frequency:    50;
-    structural nodes:     1;
-    rigid bodies:         1;
-    loadable element:     2;
+    output frequency:   50;
+    structural nodes:   1;
+    rigid bodies:       1;
+    loadable elements:  2;
     gravity;
 end: control data;
 
@@ -44,12 +46,6 @@ set: integer Body_masspoint = 11;
 
 #-----------------------------------------------------------------------
 
-#module-load
-module load: "/usr/local/mbdyn/libexec/libmodule-seabed.la";
-module load: "/usr/local/mbdyn/libexec/libmodule-contactlaw.la";
-
-#-----------------------------------------------------------------------
-
 begin: nodes;
    structural: Node_masspoint, dynamic,
         null,        # absolute position
@@ -58,7 +54,13 @@ begin: nodes;
         null;        # absolute angular velocity
       
 end: nodes;
- 
+
+#-----------------------------------------------------------------------
+
+#module-load
+module load: "/usr/local/mbdyn/libexec/libmodule-seabed.la";
+module load: "/usr/local/mbdyn/libexec/libmodule-contactlaw.la";
+
 begin: elements;
     body: Body_masspoint, Node_masspoint,
         M,      # mass
