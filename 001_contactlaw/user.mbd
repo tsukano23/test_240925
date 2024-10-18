@@ -1,0 +1,63 @@
+#-----------------------------------------------------------------------------
+
+begin: data;
+   problem: initial value;
+end: data;
+
+#-----------------------------------------------------------------------------
+
+begin: initial value;
+   initial time:   0.;
+   final time:     100.;
+   time step:      0.001;
+   max iterations: 100;
+   tolerance:      1.e-6;
+	derivatives tolerance: 1.e-5;
+	derivatives max iterations: 100;
+end: initial value;
+
+#-----------------------------------------------------------------------------
+
+begin: control data;
+   output frequency: 50;
+   structural nodes:  1;
+   rigid bodies:      1;
+   loadable elements: 2;
+   gravity;
+end: control data;
+
+#-----------------------------------------------------------------------------
+
+#Gravity
+set: real g = 9.8;                 #acceleration [m/s^2]
+
+#-----------------------------------------------------------------------------
+
+begin: nodes;
+   structural: 1,
+      dynamic,
+      reference, global, 0., 0., 0.,
+      reference, global, eye,
+      reference, global, null,
+      reference, global, null;
+end: nodes;
+
+#-----------------------------------------------------------------------------
+
+module load: "/usr/local/mbdyn/libexec/libmodule-seabed.la";
+module load: "/usr/local/mbdyn/libexec/libmodule-contactlaw.la";
+
+begin: elements;
+   body: 11,
+      1,
+      500., null, eye;
+   user defined: 21, seabed,
+      100.,
+      -100.;
+   user defined: 22, contactlaw,
+      1,
+      21;
+   gravity:
+      uniform, 0.0, 0.0, -1.0,
+      const, g;
+end: elements;
