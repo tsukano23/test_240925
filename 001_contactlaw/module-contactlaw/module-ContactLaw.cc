@@ -46,6 +46,7 @@ Contactlaw::Contactlaw (
 	unsigned int uElemLabel = (unsigned int)HP.GetInt();
 	pSeabed = dynamic_cast<Seabed *>(pDM->pFindElem(Elem::LOADABLE, uElemLabel));
 
+/*ここで読み込む必要ないよね*/
 /*
 	// read z_node
 	if (!HP.IsKeyWord("z_node")) {
@@ -206,6 +207,12 @@ Contactlaw::AssRes(
 		s = 1;
 		std ::cout << "this node is contact"<<std::endl;
 	}
+	/*test*/
+	std ::cout << "this node is contact"<<std::endl;
+
+	/*これが必要？@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+	WorkVec.ResizeReset(0);
+	return WorkVec;
 /*-------------------------------------------------------------------------------------*/
 }
 
@@ -230,6 +237,10 @@ Contactlaw::AssJac(
 	const integer iMomentumIndex = pNode->iGetFirstMomentumIndex();
 	WM.PutRowIndex(1, iMomentumIndex+3);
 	WM.PutColIndex(1, iPositionIndex+3);
+
+	/*これが必要？@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
+	WorkMat.SetNullMatrix();
+	return WorkMat;
 }
 
 

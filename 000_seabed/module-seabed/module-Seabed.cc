@@ -192,9 +192,9 @@ Seabed::Update(const VectorHandler& XCurr, const VectorHandler& XPrimeCurr)
 //process before each iteration
 void
 Seabed::BeforePredict(VectorHandler& /* X */ ,
-					VectorHandler& /* XP */ ,
-					VectorHandler& /* XPrev */ ,
-					VectorHandler& /* XPPrev */ ) const
+					   VectorHandler& /* XP */ ,
+					   VectorHandler& /* XPrev */ ,
+					   VectorHandler& /* XPPrev */ ) const
 {
 	return;
 }

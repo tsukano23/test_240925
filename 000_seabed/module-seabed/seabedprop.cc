@@ -21,17 +21,17 @@ seabedprop::~seabedprop(void)
 }
 
 void
-seabedprop::setValue(doublereal& sbz_node, doublereal& sbz_seabed)
+seabedprop::setValue(doublereal& pz_node, doublereal& pz_seabed)
 {
-    z_node = sbz_node;
-    z_seabed = sbz_seabed;
+    z_node = pz_node;
+    z_seabed = pz_seabed;
 }
 
 void
-seabedprop::get(doublereal& sbz_node, doublereal& sbz_seabed) const
+seabedprop::get(doublereal& pz_node, doublereal& pz_seabed) const
 {
-    sbz_node = z_node;
-    sbz_seabed = z_seabed;
+    pz_node = z_node;
+    pz_seabed = z_seabed;
 }
 
 seabedpropowner::seabedpropowner(void)

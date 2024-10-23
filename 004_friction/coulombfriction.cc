@@ -22,69 +22,20 @@ coulombfriction::~coulombfriction(void)
 	NO_OP;
 }
 
-void
-coulombfriction::setshearmodulus(doublereal value_K) const
-{
-    K = value_K
-}
-
-void
-coulombfriction::setZ(Vec3 vec_Z) const
-{
-    Z = {0., 0., 1.};/*vec_Z*/
-}
-
-void
-coulombfriction::setNumNord(int value_N) const
-{
-    N = value_N;
-}
-
-void
-coulombfriction::setM(doublereal value_M) const
-{
-    M = value_M;
-}
-
-/*
-void
-coulombfriction::setL0(doublereal value_L0) const
-{
-    L0 = value_L0;
-}
-*/
-
-void
-coulombfriction::Force(Vec3 F, Vec3 Z)
-{
-    doublereal value_F = M/N;
-    F = Vec3(value_F*Z[0], value_F*Z[1], value_F*[2]);
-}
-
 /* -----------------------------静止摩擦力か動摩擦力か条件分岐を用いて出力　start*/
 
 void
-coulombfriction::setStaticFrictionCoefficient(doublereal value_Nu_s) const
+coulombfriction::setValue(doublereal value_Nu_s, doublereal value_Nu_d, doublereal value_Nu_s_max) const
 {
     Nu_s = value_Nu_s;
-}
-
-void
-coulombfriction::setDynamicFrictionCoefficient(doublereal value_Nu_d) const
-{
     Nu_d = value_Nu_d;
-}
-
-void
-coulombfriction::setMaximamStaticFrictionCoefficient(doublereal value_Nu_s_max) const
-{
     Nu_s_max = value_Nu_s_max;
 }
 
 void
 coulombfriction::FrictionForce(doublereal F_Friction, doublereal F_Friction_s_max, int flag, doublereal Fx) const
 {
-    doublereal value_F = M/N;
+    doublereal value_F = ;/*seabedreactionforceのF_seabedreactionに相当*/
     F_Friction = Nu_s*value_F;
     F_Friction_s_max = Nu_s_max*value_F;
     if (F_Friction <= F_Friction_s_max)
@@ -100,5 +51,16 @@ coulombfriction::FrictionForce(doublereal F_Friction, doublereal F_Friction_s_ma
 }
 /* -----------------------------静止摩擦力か動摩擦力か条件分岐を用いて出力　end*/
 
+/* -----------------------------frectionvector  start --------------------------------------*/
 
+/*局所のz軸に関して外積計算し、局所座標系のx軸を定義*/
+
+/*nodeの節点座標を全体座標系で呼び出し（n番目,n+1番目）*/
+
+/*上記で取り出した座標から摩擦方向（係留長さ方向）ベクトルを定義*/
+
+/*局所x軸を係留長さ方向に回転（海底反力と摩擦力の関係を見やすくするため）*/
+
+
+/* -----------------------------frectionvector  end --------------------------------------*/
 /* -----------------------------coulombfriction   end--------------------------------------*/

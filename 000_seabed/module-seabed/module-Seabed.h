@@ -123,4 +123,4 @@ public:
 	virtual std::ostream& Restart(std::ostream& out) const;
 };
 
-#endif // MODULE_seabed_H
+#endif // MODULE_SEABED_H

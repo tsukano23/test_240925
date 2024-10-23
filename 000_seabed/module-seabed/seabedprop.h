@@ -1,8 +1,7 @@
+#include "dataman.h"
 
 #ifndef SEABEDPROP_H
 #define SEABEDPROP_H
-
-#include "dataman.h"
 
 /* -----------------------------------------------------------------------*/
 
@@ -15,8 +14,8 @@ public:
     seabedprop(void);
     virtual ~seabedprop(void);
 
-    virtual void setValue(doublereal& sbz_node, doublereal& sbz_seabed);
-    virtual void get(doublereal& sbz_node, doublereal& sbz_seabed) const;
+    virtual void setValue(doublereal& pz_node, doublereal& pz_seabed);
+    virtual void get(doublereal& pz_node, doublereal& pz_seabed) const;
 };
 
 #endif // SEABEDPROP_H
