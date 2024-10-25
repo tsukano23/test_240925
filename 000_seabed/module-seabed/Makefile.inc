@@ -1,1 +1,1 @@
-MODULE_DEPENDENCIES= seabedprop.la
+MODULE_DEPENDENCIES= seabedprop.lo
