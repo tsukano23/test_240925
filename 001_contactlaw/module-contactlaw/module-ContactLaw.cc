@@ -216,6 +216,10 @@ Contactlaw::AssRes(
     doublereal F_Friction = Nu_s*r;
     doublereal F_Friction_s_max = Nu_s_max*r;
 
+	//calcurate reactionvector 
+
+	//calcurate frictionvector
+
 
 	if(D>0.0){
 		s = 0;
@@ -231,6 +235,9 @@ Contactlaw::AssRes(
         flag = 1;/*動く*/
         Fx = Nu_d*r;/*動摩擦力*/
     	}
+		return Fx;
+
+
 	}
 	
 
