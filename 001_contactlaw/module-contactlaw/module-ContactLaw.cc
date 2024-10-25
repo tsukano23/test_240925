@@ -217,14 +217,16 @@ Contactlaw::AssRes(
     doublereal F_Friction_s_max = Nu_s_max*r;
 
 	//calcurate reactionvector 
-
+	Vec3 local_node_z;
 	//calcurate frictionvector
-
+	vec3 local_node_x;
+	Vec3 global_length;/*n番目-n+1番目間の長さ方向ベクトル*/
+	
 
 	if(D>0.0){
-		s = 0;
+		s = 0;/*非接触*/
 	} else{
-		s = 1;
+		s = 1;/*接触*/
 		std ::cout << "this node is contact"<<std::endl;
 
 		if (F_Friction <= F_Friction_s_max){
@@ -236,6 +238,7 @@ Contactlaw::AssRes(
         Fx = Nu_d*r;/*動摩擦力*/
     	}
 		return Fx;
+
 
 
 	}
