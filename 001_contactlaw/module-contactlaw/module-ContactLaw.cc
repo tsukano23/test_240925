@@ -205,8 +205,8 @@ Contactlaw::AssRes(
 	//calculate refrectionforece
 	doublereal mass, num_node;
 	p@@@@->get(mass,num_node);
-	/*@@@@@pSeabedの中に係留物の重さと節点の個数を定義する必要あり 241025*/
-	/*上記についてクラスは用意しているため、クラスを再びseabedmoduleに結び付けるところからスタート*/
+	/*@@@@@pSeabedの中に係留物の重さと海底に接触している節点の個数を定義する必要あり 241025*/
+	/*上記についてクラス(reactionforce)は用意しているため、クラスを再びseabedmoduleに結び付けるところからスタート*/
 	/*イメージとしては,seapropにクラスを順次追加していくイメージ*/
 	doublerfeal r = mass/num_node;
 
@@ -222,6 +222,7 @@ Contactlaw::AssRes(
 	vec3 local_node_x;
 	Vec3 global_length;/*n番目-n+1番目間の長さ方向ベクトル*/
 	
+
 
 	if(D>0.0){
 		s = 0;/*非接触*/
