@@ -203,18 +203,15 @@ Contactlaw::AssRes(
 
 
 	//calculate refrectionforece
-	doublereal mass, num_node;
-	p@@@@->get(mass,num_node);
+	doublereal mass, num_node,R;
+	p@@@@->get(mass,num_node,R);
 	/*@@@@@pSeabedの中に係留物の重さと海底に接触している節点の個数を定義する必要あり 241025*/
 	/*上記についてクラス(reactionforce)は用意しているため、クラスを再びseabedmoduleに結び付けるところからスタート*/
 	/*イメージとしては,seapropにクラスを順次追加していくイメージ*/
-	doublerfeal r = mass/num_node;
 
 	//calcurate frictionforce 
-	doublereal value_Nu_s, value_Nu_d, value_Nu_s_max;
-	p@@@@->get(value_Nu_s, value_Nu_d, value_Nu_s_max)
-    doublereal F_Friction = Nu_s*r;
-    doublereal F_Friction_s_max = Nu_s_max*r;
+	doublereal Dcrit = ;
+	
 
 	//calcurate reactionvector 
 	Vec3 local_node_z;
@@ -230,13 +227,13 @@ Contactlaw::AssRes(
 		s = 1;/*接触*/
 		std ::cout << "this node is contact"<<std::endl;
 
-		if (F_Friction <= F_Friction_s_max){
+		if (){
         flag = 0; /*動かない*/
-        Fx = Nu_s*r;/*静止摩擦力*/
+        			/*静止摩擦力*/
     	}
     	else{
         flag = 1;/*動く*/
-        Fx = Nu_d*r;/*動摩擦力*/
+        			/*動摩擦力*/
     	}
 		return Fx;
 
@@ -272,6 +269,15 @@ Contactlaw::AssJac(
 	const integer iMomentumIndex = pNode->iGetFirstMomentumIndex();
 	WM.PutRowIndex(1, iMomentumIndex+3);
 	WM.PutColIndex(1, iPositionIndex+3);
+
+/*-------------------------------------------------------------------------------------*/
+
+
+
+/*-------------------------------------------------------------------------------------*/
+
+
+
 
 	/*これが必要？@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 	WorkMat.SetNullMatrix();
