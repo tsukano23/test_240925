@@ -210,7 +210,7 @@ Contactlaw::AssRes(
 	//calculate refrectionforece
 	doublereal mass, num_node,R;
 	p@@@@->get(mass,num_node,R);
-	/*接触力を求める前段階で接触判定と接触している節点の数をカウントする必要あり　if文の指示を先にやっておくべき 241105*/
+	/*カウントしなくてよいのでは：一つの節点ごとに反力を求める都合上241105*/
 
 	//calcurate frictionforce 
 	doublereal starting_cofficient_friction ;
