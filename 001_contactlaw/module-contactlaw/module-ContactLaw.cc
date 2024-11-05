@@ -197,6 +197,11 @@ Contactlaw::AssRes(
 	//compare z coordinates
 	doublereal z_node, z_seabed;
 	pSeabed->get(z_node, z_seabed);
+
+		//節点座標をmbdファイルから取得するときはseabedprop.ccに以下のような支持を書けばよいのか
+		/*const integer iPositionIndex = pNode->iGetFirstPositionIndex();
+		  const integer iMomentumIndex = pNode->iGetFirstMomentumIndex();*/
+
 	integer s;
 	doublereal D = z_node - z_seabed;
 	/*--------ここまで一応完了*/
@@ -205,19 +210,25 @@ Contactlaw::AssRes(
 	//calculate refrectionforece
 	doublereal mass, num_node,R;
 	p@@@@->get(mass,num_node,R);
-	/*@@@@@pSeabedの中に係留物の重さと海底に接触している節点の個数を定義する必要あり 241025*/
-	/*上記についてクラス(reactionforce)は用意しているため、クラスを再びseabedmoduleに結び付けるところからスタート*/
-	/*イメージとしては,seapropにクラスを順次追加していくイメージ*/
+	/*接触力を求める前段階で接触判定と接触している節点の数をカウントする必要あり　if文の指示を先にやっておくべき 241105*/
 
 	//calcurate frictionforce 
-	doublereal Dcrit = ;
-	
+	doublereal starting_cofficient_friction ;
+	doublereal sliding_cofficient_friction ;
+	doublereal ks ;					/*ks is shear stiffness*/
+		//calcurate contact_area
+	doublereal Diameter ;
+	doublereal virtual_seabed;
+	doublereal disiatnce_node_seabed ;
+	doublereal length_node_distance;
+	doublereal contact_cos = disiatnce_node_seabed/Diameter;
+	doublereal a = 2*length_node_distance*Diameter*acos(contact_cos)/*角度と係留物の外径を用いた接触面積の計算式*/;					/*a is contact_area*/
 
-	//calcurate reactionvector 
-	Vec3 local_node_z;
-	//calcurate frictionvector
-	vec3 local_node_x;
-	Vec3 global_length;/*n番目-n+1番目間の長さ方向ベクトル*/
+	doublereal Dcrit = starting_cofficient_friction*R/(ks*a);
+
+	
+	//compare and calcurate node displacement
+	doublereal node_displacement =;
 	
 
 
@@ -227,20 +238,31 @@ Contactlaw::AssRes(
 		s = 1;/*接触*/
 		std ::cout << "this node is contact"<<std::endl;
 
-		if (){
+		if (node_displacement < Dcrit){
         flag = 0; /*動かない*/
-        			/*静止摩擦力*/
+        fricionforce = 	starting_cofficient_friction*R		/*静止摩擦力*/
     	}
     	else{
         flag = 1;/*動く*/
-        			/*動摩擦力*/
+        fricionforce = sliding_cofficient_friction*R/*動摩擦力*/
     	}
-		return Fx;
-
-
-
+		return frictionforce;
 	}
 	
+	//calcurate reactionvector 
+	Vec3 local_node_z = [0.,0.,1.];
+
+	//output reactionvector
+	Vec reaction_vector = frictionforce*local_node_z;
+
+/*一旦ここまでの結果ほしい*/
+	//calcurate frictionvector
+	vec3 local_node_x;
+		//外積計算
+	
+	Vec3 global_length;/*n番目-n+1番目間の長さ方向ベクトル*/
+
+
 
 	/*これが必要？@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@*/
 	WorkVec.ResizeReset(0);

@@ -9,18 +9,18 @@ class reactionforce
 {
 private:
     doublereal mass;
-    doublereal n;
+    doublereal n_node;
 public:
     reactionforce(void);
     virtual ~reactionforce(void);
 
 	//set private variable
     virtual void setpmass(doublereal pmass) const;
-    virtual void setpn_contact(doublereal pn_contact) const;
+    virtual void setpn_node(doublereal pn_node) const;
 
 	//
-    virtual void setValue(doublereal& pmass, doublereal& pn);
-    virtual void get(doublereal& pmass, doublereal& pn) const;
+    virtual void setValue(doublereal& pmass, doublereal& pn_node);
+    virtual void get(doublereal& pmass, doublereal& pn_node) const;
 
 };
 

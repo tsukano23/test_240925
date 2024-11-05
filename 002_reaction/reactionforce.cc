@@ -23,23 +23,23 @@ reactionforce::~reactionforce(void)
 }
 
 void
-reactionforce::setValue(doublereal& pmass, doublereal& pn_contact)
+reactionforce::setValue(doublereal& pmass, doublereal& pn_node)
 {
     mass = pmass;
-	n_contact 	 = pn_contact;
+	n_node 	 = pn_node;
     
 }
 
 void
-reactionforce::get(doublereal& pmass, doublereal& pn_contact) const
+reactionforce::get(doublereal& pmass, doublereal& pn_node) const
 {
     pmass = mass;
-	pn_contact	  = n_contact;
+	pn_node	= n_node;
 }
 
 reactionforce::force(doublereal& R)const
 {
-	R = mass/n_contact
+	R = mass/n_node
 }
 
 /* ------------------------------ reactionforce end ---------------------------------------*/
