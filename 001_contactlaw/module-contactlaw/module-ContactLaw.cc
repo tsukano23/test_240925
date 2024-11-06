@@ -208,11 +208,12 @@ Contactlaw::AssRes(
 
 
 	//calculate refrectionforece
-	doublereal mass, num_node,R;
-	p@@@@->get(mass,num_node,R);
+	doublereal mass, n_node,R;
+	p@@@@->get(mass,n_node,R);
 	/*カウントしなくてよいのでは：一つの節点ごとに反力を求める都合上241105*/
 
-	//calcurate frictionforce 
+	//calcurate frictionforce
+	///setValue
 	doublereal starting_cofficient_friction ;
 	doublereal sliding_cofficient_friction ;
 	doublereal ks ;					/*ks is shear stiffness*/

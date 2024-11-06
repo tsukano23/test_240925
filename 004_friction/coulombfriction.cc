@@ -22,33 +22,34 @@ coulombfriction::~coulombfriction(void)
 	NO_OP;
 }
 
-/* -----------------------------静止摩擦力か動摩擦力か条件分岐を用いて出力　start*/
-
 void
-coulombfriction::setValue(doublereal value_Nu_s, doublereal value_Nu_d, doublereal value_Nu_s_max) const
+coulombfriction::setValue(doublereal& pstarting_cofficient_friction, doublereal& psliding_cofficient_friction,doublereal& pks, doublereal& pDiameter, doublereal& pvirtual_seabed, doublereal& pdisiatnce_node_seabed, doublereal& plength_node_distance) const
 {
-    Nu_s = value_Nu_s;
-    Nu_d = value_Nu_d;
-    Nu_s_max = value_Nu_s_max;
+    //静止摩擦力か動摩擦力か
+    starting_cofficient_friction = pstarting_cofficient_friction;
+    sliding_cofficient_friction  = psliding_cofficient_friction;
+    ks = pks;
+    //弾性床
+    Diameter = pDiameter;
+    virtual_seabed = pvirtual_seabed;
+    disiatnce_node_seabed = pdisiatnce_node_seabed;
+    length_node_distance = plength_node_distance;
 }
 
 void
-coulombfriction::FrictionForce(doublereal F_Friction, doublereal F_Friction_s_max, int flag, doublereal Fx) const
+coulombfriction::get(doublereal& pstarting_cofficient_friction, doublereal& psliding_cofficient_friction,doublereal& pks, doublereal& pDiameter, doublereal& pvirtual_seabed, doublereal& pdisiatnce_node_seabed, doublereal& plength_node_distance) const
 {
-    doublereal value_F = ;/*seabedreactionforceのF_seabedreactionに相当*/
-    F_Friction = Nu_s*value_F;
-    F_Friction_s_max = Nu_s_max*value_F;
-    if (F_Friction <= F_Friction_s_max)
-    {
-        flag = 0; /*動かない*/
-        Fx = Nu_s*value_F;/*静止摩擦力*/
-    }
-    else
-    {
-        flag = 1;/*動く*/
-        Fx = Nu_d*value_F;/*動摩擦力*/
-    }
+    //静止摩擦力か動摩擦力か
+    pstarting_cofficient_friction = starting_cofficient_friction;
+    psliding_cofficient_friction  = sliding_cofficient_friction;
+    pks = ks;
+    //弾性床
+    pDiameter = Diameter;
+    pvirtual_seabed = virtual_seabed;
+    pdisiatnce_node_seabed = disiatnce_node_seabed;
+    plength_node_distance = length_node_distance;
 }
+
 /* -----------------------------静止摩擦力か動摩擦力か条件分岐を用いて出力　end*/
 
 /* -----------------------------frectionvector  start --------------------------------------*/

@@ -45,7 +45,7 @@ seabedpropowner::~seabedpropowner(void)
 }
 
 void
-seabedpropowner::setSeabedprop(doublereal& z_node, doublereal& z_seabed)
+seabedpropowner::setSeabedprop(doublereal& z_node, doublereal& z_seabed)const
 {
     pSeabedprop.setValue(z_node, z_seabed);
 }

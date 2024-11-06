@@ -42,4 +42,16 @@ reactionforce::force(doublereal& R)const
 	R = mass/n_node
 }
 
+void
+reactionforce::reactionvec(Vec3& z_direction)const
+{
+    z_direction = {0.,0.,1.};
+}
+
+void
+reactionforce::forcevector(Vec3& z_direction, doublereal& R)const
+{
+	Vec3 F = z_direction*R;         /*reactionforce(vector)*/
+}
+
 /* ------------------------------ reactionforce end ---------------------------------------*/
